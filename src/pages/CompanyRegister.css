@@ -1,0 +1,92 @@
+/* CompanyRegister.css */
+
+.company-container {
+  width: 100%;
+  max-width: 500px; /* Slightly wider for business forms */
+  margin: 100px auto 50px; /* Space for the fixed navbar */
+  padding: 50px 40px;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(236, 230, 208, 0.5); /* Subtle theme-color border */
+  text-align: center;
+}
+
+/* Header Styling */
+.company-container h2 {
+  font-size: 24px;
+  font-weight: 300;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #1a1a1a;
+  margin-bottom: 30px;
+}
+
+/* Form Grouping for cleaner layout */
+.company-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Input Fields - Modern Underline Style */
+.company-container input {
+  width: 100%;
+  padding: 14px 10px;
+  border: none;
+  border-bottom: 1.5px solid #eee; /* Minimalist line */
+  background: transparent;
+  font-size: 15px;
+  color: #333;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+.company-container input:focus {
+  outline: none;
+  border-bottom: 1.5px solid #00ced1; /* Your teal brand color */
+  background: rgba(0, 206, 209, 0.02); /* Very subtle teal tint */
+}
+
+/* Premium Business Button */
+.company-container button {
+  width: 100%;
+  padding: 16px;
+  margin-top: 25px;
+  background-color: #1a1a1a; /* Matching your dark Navbar */
+  color: #ece6d0; /* Your cream theme color */
+  border: 1px solid #1a1a1a;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.4s ease;
+}
+
+.company-container button:hover {
+  background-color: #00ced1; /* Teal hover to match logo */
+  border-color: #00ced1;
+  color: #1a1a1a;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 206, 209, 0.3);
+}
+
+/* Small footer text */
+.company-container p {
+  margin-top: 20px;
+  font-size: 13px;
+  color: #888;
+}
+
+.company-container span {
+  color: #00ced1;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.company-container span:hover {
+  text-decoration: underline;
+}

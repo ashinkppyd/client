@@ -1,0 +1,61 @@
+/* Force the container to be wide and premium */
+.user-container {
+  display: block !important;
+  width: 550px !important; /* Increased to 550px for a very bold look */
+  max-width: 95% !important; 
+  margin: 120px auto !important; 
+  padding: 60px 50px !important;
+  background: #ffffff !important;
+  border-radius: 24px !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1) !important;
+  box-sizing: border-box !important;
+  border: 1px solid #ece6d0 !important;
+}
+
+/* Ensure the title has space */
+.user-container h2 {
+  font-size: 30px !important;
+  letter-spacing: 5px !important;
+  text-transform: uppercase !important;
+  margin-bottom: 45px !important;
+  color: #1a1a1a !important;
+  font-weight: 300 !important;
+}
+
+/* Force inputs to be full width and stacked */
+.user-container form {
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+}
+
+.user-container input {
+  width: 100% !important;
+  margin-bottom: 20px !important;
+  padding: 18px 10px !important; /* Taller inputs */
+  border: none !important;
+  border-bottom: 2px solid #f0f0f0 !important;
+  font-size: 16px !important;
+  background: transparent !important;
+  display: block !important;
+}
+
+.user-container input:focus {
+  outline: none !important;
+  border-bottom: 2px solid #00ced1 !important;
+}
+
+/* Premium Button */
+.user-container button {
+  width: 100% !important;
+  padding: 20px !important;
+  background-color: #1a1a1a !important;
+  color: #ece6d0 !important;
+  border-radius: 12px !important;
+  border: none !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 2px !important;
+  cursor: pointer !important;
+  margin-top: 20px !important;
+}

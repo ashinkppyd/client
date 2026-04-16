@@ -1,0 +1,20 @@
+.otp-container {
+  width: 300px;
+  margin: 100px auto;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+}
+
+.otp-container input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.otp-container button {
+  width: 100%;
+  padding: 10px;
+  background: #00adb5;
+  color: white;
+}

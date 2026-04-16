@@ -1,0 +1,110 @@
+/* Navbar.css */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+
+  padding: 15px 8%;
+  background-color: #1a1a1a;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+.navbar .logo {
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  color: #00ced1;
+  margin: 0;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 35px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #ece6d0;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  position: relative;
+  transition: 0.3s;
+}
+
+/* Hover Underline */
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -5px;
+  left: 0;
+  background-color: #00ced1;
+  transition: 0.3s;
+}
+
+.nav-links a:hover::after {
+  width: 100%;
+}
+
+/* Company Register Button */
+.nav-links a:last-child {
+  background-color: #ece6d0;
+  color: #1a1a1a;
+  padding: 10px 20px;
+  border-radius: 4px;
+}
+
+.nav-links a:last-child:hover {
+  background-color: #ffffff;
+  transform: translateY(-2px);
+}
+
+/* ✅ PROFILE LINK (NEW) */
+.profile-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #ece6d0;
+}
+
+/* Remove underline effect from profile */
+.profile-link::after {
+  display: none !important;
+}
+
+/* ✅ PROFILE IMAGE (NEW) */
+.nav-profile-img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #00ced1;
+}
+
+/* ✅ LOGOUT BUTTON (NEW) */
+.logout-btn {
+  background-color: #ece6d0;
+  color: #1a1a1a;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.logout-btn:hover {
+  background-color: #ffffff;
+  transform: translateY(-2px);
+}
