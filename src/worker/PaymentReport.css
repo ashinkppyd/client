@@ -1,0 +1,149 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Nunito:wght@400;600;700;800&display=swap');
+
+.payment-page {
+  min-height: 100vh;
+  background-color: #FDF5EC; /* Signature Cream */
+  padding: 60px 8%;
+  font-family: 'Nunito', sans-serif;
+}
+
+.payment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 50px;
+  gap: 30px;
+}
+
+.title-area h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 38px;
+  color: #2C1E16;
+  text-transform: uppercase;
+  margin: 0;
+  letter-spacing: -1px;
+}
+
+.title-area p {
+  color: #6D5D55;
+  font-weight: 600;
+  margin-top: 5px;
+}
+
+/* Balance Dashboard */
+.balance-summary {
+  display: flex;
+  gap: 20px;
+}
+
+.summary-item {
+  background: white;
+  padding: 15px 25px;
+  border-radius: 20px;
+  border: 1px solid #EAD8C8;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.02);
+}
+
+.summary-item small {
+  font-size: 11px;
+  text-transform: uppercase;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #A09088;
+}
+
+.summary-item h3 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 24px;
+  margin: 5px 0 0 0;
+}
+
+.summary-item.paid h3 { color: #27AE60; }
+.summary-item.pending h3 { color: #F08E28; }
+
+/* Ledger List Styling */
+.ledger-container {
+  background: white;
+  border-radius: 30px;
+  padding: 20px;
+  box-shadow: 0 20px 50px rgba(44, 30, 22, 0.05);
+  border: 1px solid #EAD8C8;
+}
+
+.ledger-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #FDF5EC;
+  transition: background 0.3s;
+}
+
+.ledger-row.header {
+  font-weight: 900;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #A09088;
+  letter-spacing: 1px;
+  border-bottom: 2px solid #FDF5EC;
+}
+
+.site-name {
+  display: block;
+  font-weight: 800;
+  color: #2C1E16;
+  font-size: 16px;
+}
+
+.transaction-id {
+  font-size: 11px;
+  color: #A09088;
+  font-weight: 600;
+}
+
+.role-text {
+  text-transform: capitalize;
+  font-weight: 700;
+  color: #6D5D55;
+}
+
+.status-pill {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 6px 14px;
+  border-radius: 30px;
+  text-transform: uppercase;
+}
+
+.status-pill.paid { background: #E8F8F0; color: #27AE60; }
+.status-pill.pending { background: #FFF4E5; color: #F08E28; }
+
+.amount-text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 18px;
+  font-weight: 900;
+  text-align: right;
+}
+
+.amount-text.paid { color: #2C1E16; }
+.amount-text.pending { color: #F08E28; }
+
+/* Hover effect for rows */
+.ledger-row:not(.header):hover {
+  background-color: #FDF5EC;
+  border-radius: 15px;
+}
+
+.empty-ledger {
+  padding: 100px;
+  text-align: center;
+  color: #A09088;
+  font-weight: 700;
+}
+
+@media (max-width: 850px) {
+  .payment-header { flex-direction: column; align-items: flex-start; }
+  .ledger-row { grid-template-columns: 1fr 1fr; gap: 15px; }
+  .ledger-row.header { display: none; }
+  .amount-text { text-align: left; }
+}

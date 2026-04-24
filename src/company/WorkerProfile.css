@@ -1,0 +1,224 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Nunito:wght@400;600;700;800&display=swap');
+
+.worker-profile-page {
+  min-height: 100vh;
+  background-color: #FDF5EC; /* Signature Cream */
+  padding: 80px 5%;
+  font-family: 'Nunito', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.back-btn {
+  position: absolute;
+  top: 40px;
+  left: 5%;
+  background: transparent;
+  border: 2px solid #2C1E16;
+  color: #2C1E16;
+  padding: 8px 20px;
+  border-radius: 30px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.back-btn:hover {
+  background: #2C1E16;
+  color: white;
+}
+
+/* The Layout Card */
+.worker-profile-card {
+  width: 100%;
+  max-width: 900px;
+  background: white;
+  border-radius: 30px;
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  overflow: hidden;
+  box-shadow: 0 30px 60px rgba(44, 30, 22, 0.06);
+  border: 1px solid #EAD8C8;
+}
+
+/* ASIDE: Identity Column */
+.worker-aside {
+  background-color: #2C1E16; /* Deep Brown/Black */
+  padding: 60px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+}
+
+.worker-avatar {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  border: 6px solid #F08E28; /* Signature Orange */
+  overflow: hidden;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 25px;
+}
+
+.worker-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-placeholder {
+  font-size: 64px;
+  font-weight: 900;
+  color: #F08E28;
+}
+
+.worker-id-badge {
+  background: #F08E28;
+  padding: 6px 15px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.member-since {
+  margin-top: 20px;
+  opacity: 0.6;
+  font-size: 13px;
+}
+
+/* MAIN: Details Column */
+.worker-main {
+  padding: 60px;
+}
+
+.worker-header h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 42px;
+  color: #2C1E16;
+  text-transform: uppercase;
+  margin: 0;
+  letter-spacing: -1px;
+}
+
+.role-tag {
+  color: #F08E28;
+  font-weight: 800;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  display: block;
+  margin-top: 5px;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 30px;
+  margin-top: 40px;
+  padding-top: 40px;
+  border-top: 2px solid #FDF5EC;
+}
+
+.info-item label {
+  display: block;
+  font-size: 12px;
+  font-weight: 900;
+  color: #A09088;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+
+.info-item p {
+  font-size: 20px;
+  font-weight: 700;
+  color: #2C1E16;
+  margin: 0;
+}
+
+/* Actions Area */
+.profile-footer {
+  margin-top: 50px;
+  display: flex;
+  gap: 15px;
+}
+
+.contact-btn, .assign-btn {
+  flex: 1;
+  padding: 16px;
+  border-radius: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.contact-btn {
+  background: #FDF5EC;
+  border: none;
+  color: #F08E28;
+}
+
+.assign-btn {
+  background: #2C1E16;
+  color: white;
+  border: none;
+}
+
+.assign-btn:hover {
+  background: #F08E28;
+  transform: translateY(-3px);
+}
+
+/* Loading State */
+.worker-profile-loading {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #FDF5EC;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #EAD8C8;
+  border-top: 4px solid #F08E28;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 15px;
+}
+
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+/* Mobile View */
+@media (max-width: 768px) {
+  .worker-profile-card { grid-template-columns: 1fr; }
+  .worker-aside { padding: 40px; }
+  .worker-main { padding: 40px 30px; }
+  .worker-header h1 { font-size: 32px; }
+}
+.chat-btn {
+  margin-top: 10px;
+  width: 100%;
+  background: #2C1E16;
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.chat-btn:hover {
+  background: #F08E28;
+}

@@ -157,103 +157,81 @@ export default function Profile() {
   };
 
   return (
-    <div className="profile-container">
-      <div className="profile-card">
-
-        
+  <div className="profile-container">
+    <div className="profile-card">
+      
+      {/* LEFT COLUMN */}
+      <div className="visual-column">
         <div className="image-wrapper">
           <img
-            src={
-              preview
-                ? preview
-                : user.profile_image
-                ? `http://127.0.0.1:8000${user.profile_image}`
-                : "https://via.placeholder.com/120"
-            }
+            src={preview ? preview : user.profile_image ? `http://127.0.0.1:8000${user.profile_image}` : "https://via.placeholder.com/120"}
             alt="profile"
             className="profile-img"
           />
         </div>
-
         <input type="file" onChange={handleImageChange} />
-
         <button onClick={handleUpload} className="profile-btn">
           {loading ? "Uploading..." : "Upload Photo"}
         </button>
 
-       
+        {qr && (
+          <div className="mfa-box">
+            <p>Scan QR Code</p>
+            <img src={qr} alt="QR" className="mfa-qr" />
+            <input
+              className="mfa-input"
+              placeholder="000000"
+              value={otp}
+              maxLength={6}
+              onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
+            />
+            <button onClick={handleVerifyMFA} className="profile-btn">Verify</button>
+          </div>
+        )}
+      </div>
+
+      {/* RIGHT COLUMN */}
+      <div className="profile-info-section">
         <div className="profile-info">
           <h3>{user.username}</h3>
           <p>{user.email}</p>
           <span>ID: {user.custom_id}</span>
         </div>
 
-        
         <button className="edit-toggle" onClick={() => setIsEditing(!isEditing)}>
           {isEditing ? "Cancel" : "Edit Profile"}
         </button>
 
         {isEditing && (
           <div className="edit-section">
+            <label>Username</label>
             <input name="username" value={editData.username} onChange={handleChange} />
-            <input value={editData.email} disabled />
+            <label>Phone</label>
             <input name="phone" value={editData.phone} onChange={handleChange} />
+            <label>Location</label>
             <input name="place" value={editData.place} onChange={handleChange} />
-
-            <button onClick={handleUpdate} className="profile-btn">
-              Save Changes
-            </button>
+            <button onClick={handleUpdate} className="profile-btn">Save Changes</button>
           </div>
         )}
 
-        
-        <hr />
-        <h3>MFA Security 🔐</h3>
+        <div className="mfa-section">
+          <h3>Security & MFA</h3>
+          {mfaEnabled ? (
+            <>
+              <p className="mfa-enabled">✅ MFA Secured Account</p>
+              <button onClick={handleDisableMFA} className="logout-btn">Disable MFA</button>
+            </>
+          ) : !qr && (
+            <button onClick={handleEnableMFA} className="profile-btn">Enable 2FA Security</button>
+          )}
+        </div>
 
-        {!mfaEnabled && !qr && (
-          <button onClick={handleEnableMFA} className="profile-btn">
-            Enable MFA
-          </button>
-        )}
-
-        {qr && (
-          <div className="mfa-box">
-            <p>Scan this QR using Authenticator</p>
-
-            <img src={qr} alt="QR" className="mfa-qr" />
-
-            <input
-              className="mfa-input"
-              placeholder="Enter 6-digit code"
-              value={otp}
-              maxLength={6}
-              onChange={(e) =>
-                setOtp(e.target.value.replace(/\D/g, ""))
-              }
-            />
-
-            <button onClick={handleVerifyMFA} className="profile-btn">
-              Verify Code
-            </button>
-          </div>
-        )}
-
-        {mfaEnabled && (
-          <>
-            <p className="mfa-enabled">✅ MFA Enabled</p>
-
-            <button onClick={handleDisableMFA} className="logout-btn">
-              Disable MFA
-            </button>
-          </>
-        )}
-
-        
-        <button onClick={handleLogout} className="logout-btn">
-          Logout
+        <button onClick={handleLogout} className="logout-btn" style={{marginTop: '40px'}}>
+          Logout from Session
         </button>
-
       </div>
+
     </div>
+  </div>
   );
 }

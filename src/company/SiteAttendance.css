@@ -1,0 +1,103 @@
+.site-container {
+  padding: 40px;
+  background: #FDF5EC;
+  min-height: 100vh;
+}
+
+.title {
+  font-size: 32px;
+  font-weight: 900;
+  margin-bottom: 20px;
+}
+
+/* SITE */
+.site-grid {
+  display: flex;
+  gap: 15px;
+}
+
+.site-card {
+  padding: 15px 25px;
+  background: #F08E28;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* WORKERS */
+.worker-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.worker-card {
+  background: white;
+  border-radius: 15px;
+  padding: 15px;
+  border: 1px solid #EAD8C8;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.worker-card:hover {
+  transform: translateY(-5px);
+}
+
+/* STATUS COLORS */
+.status.present {
+  color: green;
+  font-weight: bold;
+}
+
+.status.absent {
+  color: red;
+  font-weight: bold;
+}
+
+.status.pending {
+  color: orange;
+  font-weight: bold;
+}
+
+/* MODAL */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-card {
+  background: white;
+  padding: 25px;
+  border-radius: 15px;
+  width: 320px;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.save-btn {
+  flex: 1;
+  background: #F08E28;
+  color: white;
+  border: none;
+  padding: 10px;
+}
+
+.close-btn {
+  flex: 1;
+  background: #2C1E16;
+  color: white;
+  border: none;
+  padding: 10px;
+}

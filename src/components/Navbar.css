@@ -1,110 +1,132 @@
-/* Navbar.css */
+/* Font */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&display=swap');
+
+/* NAVBAR */
 .navbar {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-
-  width: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
+  justify-content: space-between;
+  padding: 18px 40px;
+  font-family: 'Nunito', sans-serif;
+  background-color: transparent;
   box-sizing: border-box;
-
-  padding: 15px 8%;
-  background-color: #1a1a1a;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
 }
 
-.navbar .logo {
-  font-size: 26px;
-  font-weight: 900;
-  letter-spacing: 3px;
-  color: #00ced1;
+/* LOGO */
+.logo {
+  font-size: 24px;
+  font-weight: 800;
+  color: #2C1E16;
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
+/* LINKS CONTAINER */
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 35px;
+  gap: 18px;
 }
 
+/* RIGHT SIDE GROUP (IMPORTANT) */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* LINKS */
 .nav-links a {
   text-decoration: none;
-  color: #ece6d0;
-  font-size: 13px;
+  color: #4A3A31;
+  font-size: 14px;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  position: relative;
-  transition: 0.3s;
+  padding: 8px 16px;
+  border-radius: 25px;
+  transition: all 0.25s ease;
 }
 
-/* Hover Underline */
-.nav-links a::after {
-  content: '';
-  position: absolute;
-  width: 0;
-  height: 2px;
-  bottom: -5px;
-  left: 0;
-  background-color: #00ced1;
-  transition: 0.3s;
+/* Hover */
+.nav-links a:hover {
+  background-color: #FCE8D5;
+  color: #F08E28;
 }
 
-.nav-links a:hover::after {
-  width: 100%;
+/* ACTIVE HOME BUTTON */
+.nav-links a:first-child {
+
+  color:  #4A3A31;
 }
 
-/* Company Register Button */
-.nav-links a:last-child {
-  background-color: #ece6d0;
-  color: #1a1a1a;
-  padding: 10px 20px;
-  border-radius: 4px;
+.nav-links a:first-child:hover {
+  background-color: #D97A1E;
 }
 
-.nav-links a:last-child:hover {
-  background-color: #ffffff;
-  transform: translateY(-2px);
-}
-
-/* ✅ PROFILE LINK (NEW) */
+/* PROFILE */
 .profile-link {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #ece6d0;
+  padding: 6px 14px !important;
+  background: transparent !important;
 }
 
-/* Remove underline effect from profile */
-.profile-link::after {
+/* PROFILE IMAGE */
+.nav-profile-img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #F08E28;
+}
+
+/* 🔔 NOTIFICATION BELL ALIGNMENT */
+.notification-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+/* Make bell visually match navbar */
+.nb-bell {
+  font-size: 18px;
+  padding: 6px;
+  border-radius: 50%;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.nb-bell:hover {
+  background: #FCE8D5;
+  transform: scale(1.1);
+}
+
+/* BADGE */
+.nb-badge {
+  font-size: 10px;
+}
+
+/* REMOVE OLD BELL (IMPORTANT) */
+.bell-icon {
   display: none !important;
 }
 
-/* ✅ PROFILE IMAGE (NEW) */
-.nav-profile-img {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #00ced1;
-}
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px 20px;
+  }
 
-/* ✅ LOGOUT BUTTON (NEW) */
-.logout-btn {
-  background-color: #ece6d0;
-  color: #1a1a1a;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: 0.3s;
-}
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
 
-.logout-btn:hover {
-  background-color: #ffffff;
-  transform: translateY(-2px);
+  .nav-right {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 }

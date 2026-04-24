@@ -1,61 +1,117 @@
-/* Force the container to be wide and premium */
+/* Container centered on the global cream background */
 .user-container {
-  display: block !important;
-  width: 550px !important; /* Increased to 550px for a very bold look */
-  max-width: 95% !important; 
-  margin: 120px auto !important; 
-  padding: 60px 50px !important;
-  background: #ffffff !important;
-  border-radius: 24px !important;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1) !important;
-  box-sizing: border-box !important;
-  border: 1px solid #ece6d0 !important;
+  min-height: 90vh;
+  background-color: #ece6d0; /* Matching the Home page cream */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  font-family: 'Nunito', sans-serif;
 }
 
-/* Ensure the title has space */
+/* Heading style matching the Servio brand */
 .user-container h2 {
-  font-size: 30px !important;
-  letter-spacing: 5px !important;
-  text-transform: uppercase !important;
-  margin-bottom: 45px !important;
-  color: #1a1a1a !important;
-  font-weight: 300 !important;
+  font-size: 36px;
+  font-weight: 800;
+  color: #2C1E16;
+  margin-bottom: 25px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-/* Force inputs to be full width and stacked */
+/* Transparent form layout with grid */
 .user-container form {
-  display: flex !important;
-  flex-direction: column !important;
-  width: 100% !important;
+  background: transparent; /* No background box as requested */
+  padding: 20px 0;
+  width: 100%;
+  max-width: 600px;
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two column layout */
+  gap: 20px;
 }
 
+/* Full width for primary identification fields */
+.user-container input[name="username"],
+.user-container input[name="email"] {
+  grid-column: span 2;
+}
+
+/* Premium input styling */
 .user-container input {
-  width: 100% !important;
-  margin-bottom: 20px !important;
-  padding: 18px 10px !important; /* Taller inputs */
-  border: none !important;
-  border-bottom: 2px solid #f0f0f0 !important;
-  font-size: 16px !important;
-  background: transparent !important;
-  display: block !important;
+  width: 100%;
+  padding: 18px 25px;
+  border: 2px solid #EAD8C8; /* Thicker border for definition on cream */
+  border-radius: 15px;
+  background-color: white;
+  font-size: 16px;
+  color: #2C1E16;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
 }
 
+/* Brand orange focus state */
 .user-container input:focus {
-  outline: none !important;
-  border-bottom: 2px solid #00ced1 !important;
+  outline: none;
+  border-color: #F08E28;
+  box-shadow: 0 0 0 4px rgba(240, 142, 40, 0.1);
 }
 
-/* Premium Button */
+.user-container input::placeholder {
+  color: #A09088;
+}
+
+/* Signature Orange Button */
 .user-container button {
-  width: 100% !important;
-  padding: 20px !important;
-  background-color: #1a1a1a !important;
-  color: #ece6d0 !important;
-  border-radius: 12px !important;
-  border: none !important;
-  font-weight: 700 !important;
-  text-transform: uppercase !important;
-  letter-spacing: 2px !important;
-  cursor: pointer !important;
-  margin-top: 20px !important;
+  grid-column: span 2;
+  margin-top: 20px;
+  background-color: #F08E28;
+  color: white;
+  border: none;
+  padding: 20px;
+  border-radius: 40px; /* Rounded pill shape */
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 20px rgba(240, 142, 40, 0.2);
+}
+
+.user-container button:hover {
+  background-color: #D97A1E;
+  transform: translateY(-3px);
+  box-shadow: 0 15px 25px rgba(240, 142, 40, 0.3);
+}
+
+/* Interactive Back Link */
+.back-link {
+  margin-top: 30px;
+  color: #6D5D55;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 15px;
+  transition: color 0.3s;
+}
+
+.back-link:hover {
+  color: #F08E28;
+}
+
+/* Responsive Grid for Mobile */
+@media (max-width: 600px) {
+  .user-container form {
+    grid-template-columns: 1fr; /* Stacked layout for small screens */
+  }
+  
+  .user-container input[name="username"],
+  .user-container input[name="email"],
+  .user-container button {
+    grid-column: span 1;
+  }
+  
+  .user-container h2 {
+    font-size: 28px;
+  }
 }

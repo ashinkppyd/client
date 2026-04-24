@@ -1,0 +1,142 @@
+/* Container */
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 90vh;
+  max-width: 700px;
+  margin: 20px auto;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* Header */
+.chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background: #f8fafc;
+  border-bottom: 1px solid #eee;
+  font-weight: 600;
+}
+
+.chat-header span {
+  font-size: 12px;
+  color: #666;
+}
+
+/* Chat window */
+.chat-window {
+  flex: 1;
+  padding: 15px;
+  overflow-y: auto;
+  background: #f4f7fb;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Scrollbar */
+.chat-window::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-window::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 10px;
+}
+
+/* Message bubble base */
+.chat-bubble {
+  max-width: 70%;
+  padding: 10px 14px;
+  margin: 6px 0;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
+/* My messages (right) */
+.chat-bubble.me {
+  align-self: flex-end;
+  background: #d1ffd6;
+  text-align: right;
+  border-bottom-right-radius: 4px;
+}
+
+/* Other messages (left) */
+.chat-bubble.other {
+  align-self: flex-start;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-bottom-left-radius: 4px;
+}
+
+/* Sender name */
+.chat-sender {
+  font-size: 11px;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 2px;
+}
+
+/* Input area */
+.chat-input-area {
+  display: flex;
+  padding: 12px;
+  border-top: 1px solid #eee;
+  background: #fff;
+}
+
+/* Input */
+.chat-input-area input {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  outline: none;
+  font-size: 14px;
+  transition: border 0.2s;
+}
+
+.chat-input-area input:focus {
+  border-color: #f08e28;
+}
+
+/* Send button */
+.chat-input-area button {
+  margin-left: 10px;
+  padding: 10px 18px;
+  border-radius: 20px;
+  border: none;
+  background: #f08e28;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.chat-input-area button:hover {
+  background: #d97706;
+}
+
+/* Empty text */
+.chat-window p {
+  color: #888;
+  font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .chat-container {
+    height: 100vh;
+    border-radius: 0;
+  }
+
+  .chat-bubble {
+    max-width: 85%;
+  }
+}

@@ -1,0 +1,170 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Nunito:wght@400;600;800&display=swap');
+
+.worker-sites-page {
+  min-height: 100vh;
+  background-color: #FDF5EC; /* Signature Cream */
+  padding: 60px 10%;
+  font-family: 'Nunito', sans-serif;
+}
+
+.worker-header {
+  margin-bottom: 50px;
+  text-align: left;
+}
+
+.worker-header h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 36px;
+  color: #2C1E16;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.worker-header p {
+  color: #6D5D55;
+  font-weight: 600;
+  margin-top: 5px;
+}
+
+/* Grouping slots under a Site */
+.job-site-group {
+  margin-bottom: 50px;
+}
+
+.site-info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: 2px solid #EAD8C8;
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+}
+
+.title-box h3 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 24px;
+  color: #2C1E16;
+  margin: 0;
+}
+
+.title-box span {
+  font-size: 14px;
+  font-weight: 700;
+  color: #F08E28;
+}
+
+.date-tag {
+  background: #2C1E16;
+  color: white;
+  padding: 6px 15px;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 13px;
+}
+
+/* Job Cards Grid */
+.job-slots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.job-slot-card {
+  background: white;
+  border-radius: 20px;
+  padding: 20px;
+  border: 1px solid #EAD8C8;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.02);
+  transition: transform 0.3s ease;
+}
+
+.job-slot-card:hover {
+  transform: translateY(-5px);
+  border-color: #F08E28;
+}
+
+.position-name {
+  display: block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  color: #2C1E16;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.availability-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 800;
+  color: #6D5D55;
+  background: #FDF5EC;
+  padding: 5px 12px;
+  border-radius: 20px;
+  width: fit-content;
+  margin-bottom: 20px;
+}
+
+.availability-pill .dot {
+  width: 8px;
+  height: 8px;
+  background: #27AE60;
+  border-radius: 50%;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.4; }
+  100% { opacity: 1; }
+}
+
+/* Apply Button */
+.apply-btn {
+  background-color: #F08E28;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.apply-btn:hover:not(:disabled) {
+  background-color: #2C1E16;
+}
+
+.apply-btn:disabled {
+  background-color: #A09088;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Mobile Fix */
+@media (max-width: 768px) {
+  .worker-sites-page { padding: 40px 20px; }
+  .site-info-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+}
+
+.chat-btn {
+  margin-top: 10px;
+  width: 100%;
+  background: #2C1E16;
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.chat-btn:hover {
+  background: #F08E28;
+}

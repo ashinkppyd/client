@@ -1,92 +1,126 @@
-/* CompanyRegister.css */
-
+/* Container to center the form on the page */
 .company-container {
-  width: 100%;
-  max-width: 500px; /* Slightly wider for business forms */
-  margin: 100px auto 50px; /* Space for the fixed navbar */
-  padding: 50px 40px;
-  background: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(236, 230, 208, 0.5); /* Subtle theme-color border */
-  text-align: center;
-}
-
-/* Header Styling */
-.company-container h2 {
-  font-size: 24px;
-  font-weight: 300;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: #1a1a1a;
-  margin-bottom: 30px;
-}
-
-/* Form Grouping for cleaner layout */
-.company-container form {
+  min-height: 90vh;
+  background-color:  #ece6d0; /* Matching the Home page cream */
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  font-family: 'Nunito', sans-serif;
+}
+
+/* The form card */
+.company-container h2 {
+  font-size: 36px;
+  font-weight: 800;
+  color: #2C1E16;
+  margin-bottom: 25px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.company-container form {
+  background: white;
+  padding: 40px;
+  border-radius: 25px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  max-width: 500px;
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two column layout for larger screens */
   gap: 15px;
 }
 
-/* Input Fields - Modern Underline Style */
+/* Make email and company name full width */
+.company-container input[name="company_name"],
+.company-container input[name="email"] {
+  grid-column: span 2;
+}
+
+/* Input Styling */
 .company-container input {
   width: 100%;
-  padding: 14px 10px;
-  border: none;
-  border-bottom: 1.5px solid #eee; /* Minimalist line */
-  background: transparent;
+  padding: 15px 20px;
+  border: 1px solid #EAD8C8;
+  border-radius: 12px;
+  background-color: #FAFAFA;
   font-size: 15px;
-  color: #333;
+  color: #2C1E16;
   box-sizing: border-box;
   transition: all 0.3s ease;
 }
 
 .company-container input:focus {
   outline: none;
-  border-bottom: 1.5px solid #00ced1; /* Your teal brand color */
-  background: rgba(0, 206, 209, 0.02); /* Very subtle teal tint */
+  border-color: #F08E28;
+  background-color: #fff;
+  box-shadow: 0 0 0 4px rgba(240, 142, 40, 0.1);
 }
 
-/* Premium Business Button */
+.company-container input::placeholder {
+  color: #A09088;
+}
+
+/* Submit Button */
 .company-container button {
-  width: 100%;
-  padding: 16px;
-  margin-top: 25px;
-  background-color: #1a1a1a; /* Matching your dark Navbar */
-  color: #ece6d0; /* Your cream theme color */
-  border: 1px solid #1a1a1a;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 2px;
+  grid-column: span 2;
+  margin-top: 15px;
+  background-color: #F08E28;
+  color: white;
+  border: none;
+  padding: 18px;
+  border-radius: 15px;
+  font-size: 16px;
+  font-weight: 800;
   cursor: pointer;
-  transition: all 0.4s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 20px rgba(240, 142, 40, 0.2);
 }
 
 .company-container button:hover {
-  background-color: #00ced1; /* Teal hover to match logo */
-  border-color: #00ced1;
-  color: #1a1a1a;
+  background-color: #D97A1E;
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0, 206, 209, 0.3);
+  box-shadow: 0 15px 25px rgba(240, 142, 40, 0.3);
 }
 
-/* Small footer text */
-.company-container p {
-  margin-top: 20px;
-  font-size: 13px;
-  color: #888;
-}
-
-.company-container span {
-  color: #00ced1;
+/* Back Link */
+.back-link {
+  margin-top: 25px;
+  color: #6D5D55;
   font-weight: 600;
   cursor: pointer;
-  text-decoration: none;
+  transition: color 0.3s ease;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
-.company-container span:hover {
+.back-link:hover {
+  color: #F08E28;
   text-decoration: underline;
+}
+
+/* Responsive tweaks */
+@media (max-width: 600px) {
+  .company-container form {
+    grid-template-columns: 1fr; /* Stack inputs on mobile */
+    padding: 30px 20px;
+  }
+  
+  .company-container input[name="company_name"],
+  .company-container input[name="email"] {
+    grid-column: span 1;
+  }
+
+  .company-container button {
+    grid-column: span 1;
+  }
+  
+  .company-container h2 {
+    font-size: 28px;
+  }
 }

@@ -1,12 +1,200 @@
-.home {
-  text-align: center;
-  margin-top: 100px;
+/* Full cover setup */
+.home-page-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #FDF5EC; /* Cream background */
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
 }
 
-.home h1 {
-  font-size: 40px;
+.home-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0 5%;
+  box-sizing: border-box;
+  overflow: hidden; /* Prevents unwanted scrollbars from floating items */
 }
 
-.home p {
-  color: gray;
+.hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  width: 100%;
+  max-width: 1440px;
+  position: relative;
+  min-height: 80vh;
+}
+
+/* Typography & Content */
+.badge {
+  color: #F08E28;
+  background: #FDF5EC;
+  padding: 8px 20px;
+  border-radius: 30px;
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: 1.5px;
+  display: inline-block;
+}
+
+.hero-title {
+  font-size: clamp(48px, 6vw, 90px); /* Responsive font sizing */
+  line-height: 0.95;
+  color: #2C1E16;
+  margin: 25px 0;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.hero-title span {
+  color: #2C1E16;
+}
+
+.hero-description {
+  color: #6D5D55;
+  font-size: clamp(16px, 1.2vw, 20px);
+  max-width: 500px;
+  line-height: 1.6;
+  margin-bottom: 40px;
+}
+
+.cta-group {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 50px;
+}
+
+.btn-primary {
+  background-color: #F08E28;
+  color: white;
+  padding: 20px 45px;
+  border-radius: 40px;
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 16px;
+  box-shadow: 0 15px 30px rgba(240, 142, 40, 0.3);
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(240, 142, 40, 0.4);
+}
+
+.experience-badge {
+  border-left: 4px solid #F08E28;
+  padding-left: 20px;
+}
+
+.experience-badge strong {
+  display: block;
+  font-size: 26px;
+  color: #2C1E16;
+}
+
+.experience-badge small {
+  color: #6D5D55;
+  font-weight: 600;
+}
+
+/* Service Cards */
+.mini-cards {
+  display: flex;
+  gap: 20px;
+}
+
+.mini-card {
+  background: white;
+  padding: 18px 25px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.06);
+}
+
+.card-icon { font-size: 28px; }
+.card-name { font-weight: 800; font-size: 15px; margin: 0; color: #2C1E16; }
+.card-tag { font-size: 13px; color: #F08E28; margin: 2px 0 0 0; font-weight: 700; }
+
+/* The Main Hero Image Section */
+.hero-image-container {
+  position: relative;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.main-chef-img {
+  width: 140%; /* Makes the image significantly larger */
+  max-width: 900px;
+  height: auto;
+  z-index: 2;
+  position: relative;
+  transform: scale(1.1) translateX(5%); /* Slight zoom and shift for impact */
+  filter: drop-shadow(0 30px 60px rgba(0,0,0,0.12));
+}
+
+/* Floating Decorations */
+.element {
+  position: absolute;
+  font-size: 50px;
+  z-index: 3;
+  animation: float 6s ease-in-out infinite;
+}
+
+.e1 { top: 10%; right: 10%; animation-delay: 0s; }
+.e2 { top: 35%; left: -5%; animation-delay: 1.5s; }
+.e3 { bottom: 20%; right: 0%; animation-delay: 3s; }
+.e4 { bottom: 5%; left: 10%; animation-delay: 4.5s; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-30px) rotate(15deg); }
+}
+
+/* Slider Arrows */
+.nav-arrows {
+  position: absolute;
+  bottom: 20px;
+  right: -20px;
+  display: flex;
+  gap: 15px;
+  z-index: 10;
+}
+
+.arrow-btn {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 2px solid #EAD8C8;
+  background: white;
+  font-size: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.arrow-btn.active {
+  background: #F08E28;
+  color: white;
+  border-color: #F08E28;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .hero { grid-template-columns: 1fr; text-align: center; }
+  .hero-content { order: 2; margin-top: 50px; display: flex; flex-direction: column; align-items: center; }
+  .hero-image-container { order: 1; }
+  .main-chef-img { width: 80%; transform: none; }
+  .nav-arrows { right: 50%; transform: translateX(50%); bottom: -40px; }
 }

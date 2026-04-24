@@ -1,0 +1,133 @@
+/* Wrapper */
+.nb-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* 🔔 Bell Button */
+.nb-bell {
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  position: relative;
+  padding: 6px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.nb-bell:hover {
+  background: rgba(0,0,0,0.05);
+}
+
+.nb-bell.active {
+  background: rgba(0,0,0,0.08);
+}
+
+/* 🔴 Badge */
+.nb-badge {
+  position: absolute;
+  top: -4px;
+  right: -6px;
+  background: #ff3b3b;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 50%;
+}
+
+/* 📩 Dropdown */
+.nb-dropdown {
+  position: absolute;
+  top: 42px;
+  right: 0;
+  width: 320px;
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+  opacity: 0;
+  transform: translateY(-10px) scale(0.98);
+  pointer-events: none;
+  transition: all 0.2s ease;
+  overflow: hidden;
+  z-index: 1000;
+}
+
+.nb-dropdown.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+/* Header */
+.nb-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+  font-weight: 600;
+  border-bottom: 1px solid #eee;
+}
+
+.nb-header button {
+  font-size: 12px;
+  border: none;
+  background: #eee;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* List */
+.nb-list {
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+/* Item */
+.nb-item {
+  display: flex;
+  gap: 10px;
+  padding: 12px;
+  border-bottom: 1px solid #f2f2f2;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+
+.nb-item:hover {
+  background: #f5f7fa;
+}
+
+/* Unread */
+.nb-item.unread {
+  background: #eef4ff;
+}
+
+/* Dot indicator */
+.nb-dot {
+  width: 8px;
+  height: 8px;
+  background: #3b82f6;
+  border-radius: 50%;
+  margin-top: 6px;
+}
+
+/* Content */
+.nb-content p {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.nb-content span {
+  font-size: 11px;
+  color: #777;
+}
+
+/* Empty */
+.nb-empty {
+  padding: 20px;
+  text-align: center;
+  color: #888;
+}

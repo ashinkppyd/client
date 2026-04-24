@@ -45,39 +45,43 @@ export default function Login() {
   };
 
   return (
-    <div className="login-container">
-      <h2>Login</h2>
+<div className="login-container">
+  <h2>Welcome Back</h2>
 
-      <form onSubmit={handleLogin}>
-        <input
-          name="username"
-          placeholder="Username or Email"
-          onChange={handleChange}
-        />
+  <form onSubmit={handleLogin}>
+    <input
+      name="username"
+      placeholder="Username or Email"
+      onChange={handleChange}
+      required
+    />
 
-        <input
-          name="password"
-          type="password"
-          placeholder="Password"
-          onChange={handleChange}
-        />
+    <input
+      name="password"
+      type="password"
+      placeholder="Password"
+      onChange={handleChange}
+      required
+    />
 
-        <button type="submit">Login</button>
+    <button type="submit">Login</button>
 
-        <div style={{ marginTop: "20px", textAlign: "center" }}>
-          <GoogleAuth />
-        </div>
+    <div className="login-divider">or login with</div>
 
-        <div className="login-footer">
-          <span onClick={() => navigate("/user-register")}>
-            Register here
-          </span>
-
-          <span onClick={() => navigate("/forgot-password")}>
-            Forgot Password?
-          </span>
-        </div>
-      </form>
+    <div className="google-auth-wrapper">
+      <GoogleAuth />
     </div>
+
+    <div className="login-footer">
+      <span onClick={() => navigate("/user-register")}>
+        Create Account
+      </span>
+
+      <span onClick={() => navigate("/forgot-password")}>
+        Forgot Password?
+      </span>
+    </div>
+  </form>
+</div>
   );
 }

@@ -25,7 +25,7 @@ API.interceptors.response.use(
       console.log("API ERROR:", error.response.data);
 
       if (error.response.status === 401) {
-        console.warn("Unauthorized - cookie missing or expired ❌");
+        console.warn("Unauthorized - cookie missing or expired ");
       }
     } else {
       console.log("NETWORK ERROR:", error);

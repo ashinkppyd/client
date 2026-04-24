@@ -1,8 +1,8 @@
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import API from "../api/axios";
+import NotificationBell from "./NotificationBell"; 
 import "./Navbar.css";
-import { toast } from "react-toastify";
 
 export default function Navbar() {
   const [user, setUser] = useState(null);
@@ -17,20 +17,6 @@ export default function Navbar() {
         setUser(null);
       });
   }, [location.pathname]);
-
-  const handleLogout = async () => {
-    try {
-      await API.post("/logout/", {}, { withCredentials: true });
-      setUser(null);
-      toast.success("Logged out successfully 👋");
-
-     
-      window.location.href = "/login";
-
-    } catch (err) {
-      toast.error("Logout failed ❌");
-    }
-  };
 
   return (
     <nav className="navbar">
@@ -49,8 +35,9 @@ export default function Navbar() {
 
         
         {user && (
-          <>
+          <div className="nav-right">
             
+           
             {user.role === "worker" && (
               <>
                 <Link to="/sites">Sites</Link>
@@ -59,14 +46,23 @@ export default function Navbar() {
               </>
             )}
 
-           
+            
             {user.role === "company" && (
               <>
                 <Link to="/dashboard">Dashboard</Link>
+                <Link to="/create-site">Create Site</Link>
+                <Link to="/bookings">Bookings</Link>
+                <Link to="/site-attendance">Site Attendance</Link>
               </>
             )}
 
-           
+            
+            <Link to="/chat">💬 Chat</Link>
+
+            
+            <NotificationBell />
+
+            
             <Link to="/profile" className="profile-link">
               {user.profile_image ? (
                 <img
@@ -80,8 +76,7 @@ export default function Navbar() {
               {user.username}
             </Link>
 
-            
-          </>
+          </div>
         )}
       </div>
     </nav>

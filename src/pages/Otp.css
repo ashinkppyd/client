@@ -1,20 +1,123 @@
-.otp-container {
-  width: 300px;
-  margin: 100px auto;
+/* Background wrapper */
+.user-container {
+  min-height: 100vh;
+  background-color: #FDF5EC; /* Global cream background */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   padding: 20px;
-  background: white;
-  border-radius: 10px;
+  font-family: 'Nunito', sans-serif;
 }
 
-.otp-container input {
-  width: 100%;
-  padding: 10px;
-  margin: 10px 0;
+/* Card for OTP content */
+.user-container h2 {
+  font-size: 32px;
+  font-weight: 800;
+  color: #2C1E16;
+  margin-bottom: 10px;
+  text-transform: uppercase;
 }
 
-.otp-container button {
+/* Timer and descriptive text */
+.user-container p {
+  font-weight: 700;
+  color: #F08E28; /* Highlighted Orange */
+  background: #FCE8D5;
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-size: 14px;
+  margin-bottom: 25px;
+}
+
+/* Form Layout */
+.user-container form {
   width: 100%;
-  padding: 10px;
-  background: #00adb5;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* OTP Input Field */
+.user-container input {
+  width: 100%;
+  padding: 18px;
+  border: 2px solid #EAD8C8;
+  border-radius: 15px;
+  background-color: white;
+  font-size: 22px; /* Large text for easy reading */
+  font-weight: 800;
+  text-align: center;
+  letter-spacing: 5px; /* Spaced digits */
+  color: #2C1E16;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+.user-container input:focus {
+  outline: none;
+  border-color: #F08E28;
+  box-shadow: 0 0 0 4px rgba(240, 142, 40, 0.1);
+}
+
+.user-container input:disabled {
+  background-color: #f5f5f5;
+  border-color: #ddd;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Universal Button Styling (overriding your inline green/orange for a premium look) */
+.user-container button {
+  width: 100%;
+  padding: 18px;
+  border: none;
+  border-radius: 40px;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* Specific Style for Verify Button (Greenish-Teal for success) */
+.user-container button[type="submit"] {
+  background-color: #2D6A4F; /* Deep premium green */
   color: white;
+}
+
+.user-container button[type="submit"]:hover:not(:disabled) {
+  background-color: #1B4332;
+  transform: translateY(-2px);
+}
+
+/* Specific Style for Resend Button (Orange to match brand) */
+.user-container button[type="button"] {
+  background-color: #F08E28; 
+  color: white;
+}
+
+.user-container button[type="button"]:hover:not(:disabled) {
+  background-color: #D97A1E;
+  transform: translateY(-2px);
+}
+
+.user-container button:disabled {
+  background-color: #ccc !important;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+/* Animation */
+.user-container {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
