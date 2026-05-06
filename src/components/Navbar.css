@@ -54,6 +54,19 @@
   color: #F08E28;
 }
 
+.nav-links .ai-nav-link {
+  color: #2C1E16;
+  border: 1px solid rgba(240, 142, 40, 0.28);
+  background: linear-gradient(135deg, #FFF8EF 0%, #FFE8CA 100%);
+  box-shadow: 0 8px 22px rgba(240, 142, 40, 0.16);
+}
+
+.nav-links .ai-nav-link:hover {
+  color: #ffffff;
+  background: linear-gradient(135deg, #F08E28 0%, #C76312 100%);
+  transform: translateY(-1px);
+}
+
 /* ACTIVE HOME BUTTON */
 .nav-links a:first-child {
 

@@ -25,11 +25,25 @@ import PaymentReport from "./worker/PaymentReport";
 import SiteAttendance from "./company/SiteAttendance";
 import ChatPage from "./Chat/ChatPage";
 import NotificationBell from "./components/NotificationBell";
+import AiService from "./pages/AiService";
 
 
 
 function App() {
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker
+    .register("/firebase-messaging-sw.js")
+    .then((registration) => {
+      console.log("✅ SW registered:", registration.scope);
+    })
+    .catch((err) => {
+      console.log("❌ SW registration failed:", err);
+    });
+}
+
   return (
+    
     <BrowserRouter>
       <Navbar />
 
@@ -57,6 +71,7 @@ function App() {
         <Route path="/payment-report" element={<PaymentReport />} />
         <Route path="/site-attendance" element={<SiteAttendance />} />
         <Route path="/chat" element={<ChatPage />} />
+        <Route path="/ai-service" element={<AiService />} />
       </Routes>
 
       <ToastContainer position="top-right" autoClose={3000} />

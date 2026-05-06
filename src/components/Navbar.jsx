@@ -24,6 +24,7 @@ export default function Navbar() {
 
       <div className="nav-links">
         <Link to="/">Home</Link>
+        <Link to="/ai-service" className="ai-nav-link">AI Service</Link>
 
         
         {!user && (

@@ -4,6 +4,7 @@ import API from "../api/axios";
 import GoogleAuth from "./GoogleAuth";
 import "./Login.css";
 import { toast } from "react-toastify";
+import { getFCMToken } from "../../firebase";  
 
 export default function Login() {
   const navigate = useNavigate();
@@ -27,15 +28,35 @@ export default function Login() {
 
       console.log(res.data);
 
-      
       if (res.data.mfa_required) {
         toast.info("Enter MFA code 🔐");
-        navigate("/mfa");   
+        navigate("/mfa");
         return;
       }
 
-      
       toast.success("Login successful 🎉");
+
+      try {
+        console.log("Attempting to retrieve FCM token after login...");
+        const token = await getFCMToken();
+        console.log("FCM Token retrieved:", token);
+        if (token) {
+          console.log("FCM Token:", token);
+
+          await API.post(
+            "/save-token/",
+            { token },
+            { withCredentials: true }
+          );
+
+          console.log("Token saved to backend ✅");
+        } else {
+          console.log("No FCM token received");
+        }
+      } catch (err) {
+        console.log("FCM Error:", err);
+      }
+
       window.location.href = "/";
 
     } catch (err) {
@@ -45,43 +66,43 @@ export default function Login() {
   };
 
   return (
-<div className="login-container">
-  <h2>Welcome Back</h2>
+    <div className="login-container">
+      <h2>Welcome Back</h2>
 
-  <form onSubmit={handleLogin}>
-    <input
-      name="username"
-      placeholder="Username or Email"
-      onChange={handleChange}
-      required
-    />
+      <form onSubmit={handleLogin}>
+        <input
+          name="username"
+          placeholder="Username or Email"
+          onChange={handleChange}
+          required
+        />
 
-    <input
-      name="password"
-      type="password"
-      placeholder="Password"
-      onChange={handleChange}
-      required
-    />
+        <input
+          name="password"
+          type="password"
+          placeholder="Password"
+          onChange={handleChange}
+          required
+        />
 
-    <button type="submit">Login</button>
+        <button type="submit">Login</button>
 
-    <div className="login-divider">or login with</div>
+        <div className="login-divider">or login with</div>
 
-    <div className="google-auth-wrapper">
-      <GoogleAuth />
+        <div className="google-auth-wrapper">
+          <GoogleAuth />
+        </div>
+
+        <div className="login-footer">
+          <span onClick={() => navigate("/user-register")}>
+            Create Account
+          </span>
+
+          <span onClick={() => navigate("/forgot-password")}>
+            Forgot Password?
+          </span>
+        </div>
+      </form>
     </div>
-
-    <div className="login-footer">
-      <span onClick={() => navigate("/user-register")}>
-        Create Account
-      </span>
-
-      <span onClick={() => navigate("/forgot-password")}>
-        Forgot Password?
-      </span>
-    </div>
-  </form>
-</div>
   );
 }
