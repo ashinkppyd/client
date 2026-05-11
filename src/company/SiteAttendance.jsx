@@ -10,39 +10,32 @@ const SiteAttendance = () => {
   const [selectedWorker, setSelectedWorker] = useState(null);
   const [attendance, setAttendance] = useState("");
   const [rating, setRating] = useState("");
+  const [loadingWorkers, setLoadingWorkers] = useState(false);
 
-  useEffect(() => {
-    fetchSites();
-  }, []);
+  useEffect(() => { fetchSites(); }, []);
 
   const fetchSites = async () => {
     try {
       const res = await api.get("my-sites/");
       setSites(Array.isArray(res.data) ? res.data : []);
     } catch {
-      toast.error("Failed to load sites ");
+      toast.error("Failed to load sites ❌");
     }
   };
 
- 
   const loadWorkers = async (site) => {
+    setLoadingWorkers(true);
     try {
       const res = await api.get(`site-report/${site.id}/`);
-
-      console.log("API RESPONSE:", res.data);
-
-    
       const data = Array.isArray(res.data)
         ? res.data
         : res.data.workers || res.data.data || [];
-
       setWorkers(data);
       setSelectedSite(site);
-
-    } catch (err) {
-      console.log(err);
+    } catch {
       toast.error("Failed to load workers ❌");
     }
+    setLoadingWorkers(false);
   };
 
   const openWorker = (worker) => {
@@ -52,141 +45,248 @@ const SiteAttendance = () => {
   };
 
   const handleSubmit = async () => {
-    if (!attendance) {
-      toast.error("Select attendance ❌");
-      return;
-    }
-
+    if (!attendance) { toast.error("Select attendance ❌"); return; }
     try {
       await api.patch(`booking-update/${selectedWorker.booking_id}/`, {
         attendance,
         rating: attendance === "present" ? rating : null,
       });
-
       toast.success("Updated successfully ✅");
-
       loadWorkers(selectedSite);
       setSelectedWorker(null);
-
     } catch (err) {
       console.log(err.response?.data);
       toast.error("Update failed ❌");
     }
   };
 
+  const attendanceMeta = {
+    present: { label: "Present", icon: "✅", cls: "present" },
+    absent:  { label: "Absent",  icon: "❌", cls: "absent"  },
+    pending: { label: "Pending", icon: "⏳", cls: "pending" },
+  };
+
+  const presentCount = workers.filter(w => w.attendance === "present").length;
+  const absentCount  = workers.filter(w => w.attendance === "absent").length;
+  const pendingCount = workers.filter(w => !w.attendance || w.attendance === "pending").length;
+
   return (
-    <div className="site-container">
-      <h2 className="title">📍 Site Attendance</h2>
+    <div className="sa-page">
+      <div className="sa-blob-tr" />
+      <div className="sa-blob-bl" />
+      <div className="sa-dot-grid" />
 
-     
-      {!selectedSite && (
-        <div>
-          <h3>Select Site</h3>
+      <div className="sa-inner">
 
-          <div className="site-grid">
-            {sites.map((site) => (
-              <div
-                key={site.id}
-                className="site-card"
-                onClick={() => loadWorkers(site)}
-              >
-                {site.name}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-     
-      {selectedSite && (
-        <div>
-          <button
-            className="back-btn"
-            onClick={() => setSelectedSite(null)}
-          >
-            ⬅ Back
-          </button>
-
-          <h3>Workers at {selectedSite.name}</h3>
-
-          {!Array.isArray(workers) || workers.length === 0 ? (
-            <p>No workers found</p>
-          ) : (
-            <div className="worker-grid">
-              {workers.map((w) => (
-                <div
-                  key={w.booking_id}
-                  className={`worker-card ${w.attendance || "pending"}`}
-                  onClick={() => openWorker(w)}
-                >
-                  <h4>👤 {w.worker_name}</h4>
-
-                  <p><strong>Role:</strong> {w.role?.replace("_", " ")}</p>
-                  <p>📞 {w.phone}</p>
-                  <p>📍 {w.location}</p>
-                  <p>💰 ₹{w.salary || 0}</p>
-
-                  <p className={`status ${w.attendance}`}>
-                    {w.attendance === "present" && "✅ Present"}
-                    {w.attendance === "absent" && "❌ Absent"}
-                    {!w.attendance || w.attendance === "pending" && "⏳ Pending"}
-                  </p>
-                </div>
-              ))}
-            </div>
+        {/* ── Page header ── */}
+        <div className="sa-page-header">
+          {selectedSite && (
+            <button className="sa-back-btn" onClick={() => { setSelectedSite(null); setWorkers([]); }}>
+              ← Back to Sites
+            </button>
           )}
+          <div className="sa-header-badge">
+            {selectedSite ? "📍 " + selectedSite.name : "📍 Site Attendance"}
+          </div>
+          <h1 className="sa-page-title">
+            {selectedSite
+              ? <><span className="sa-gradient-text">Workers</span> on Site</>
+              : <>Site <span className="sa-gradient-text">Attendance</span></>}
+          </h1>
+          <p className="sa-page-sub">
+            {selectedSite
+              ? `Manage attendance and ratings for ${selectedSite.name}.`
+              : "Select a site to manage worker attendance and ratings."}
+          </p>
         </div>
-      )}
 
-      
-      {selectedWorker && (
-        <div className="modal-overlay">
-          <div className="modal-card">
+        {/* ══════════════ SITES VIEW ══════════════ */}
+        {!selectedSite && (
+          <>
+            {sites.length === 0 ? (
+              <div className="sa-empty">
+                <div className="sa-empty-icon">🏗️</div>
+                <h3>No sites found</h3>
+                <p>Your created event sites will appear here.</p>
+              </div>
+            ) : (
+              <div className="sa-sites-grid">
+                {sites.map((site) => (
+                  <div key={site.id} className="sa-site-card" onClick={() => loadWorkers(site)}>
+                    <div className="sa-site-card-top">
+                      <div className="sa-site-icon">🎪</div>
+                      <span className="sa-site-arrow">→</span>
+                    </div>
+                    <div className="sa-site-name">{site.name}</div>
+                    <div className="sa-site-meta">
+                      {site.location && <span>📍 {site.location}</span>}
+                      {site.date     && <span>📅 {new Date(site.date).toLocaleDateString("en-GB", { day:"numeric", month:"short" })}</span>}
+                    </div>
+                    <div className="sa-site-cta">View Workers →</div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
+        )}
 
-            <h2>👤 {selectedWorker.worker_name}</h2>
-
-            <p><strong>Role:</strong> {selectedWorker.role}</p>
-            <p><strong>Phone:</strong> {selectedWorker.phone}</p>
-            <p><strong>Location:</strong> {selectedWorker.location}</p>
-            <p><strong>Salary:</strong> ₹{selectedWorker.salary}</p>
-
-            <label>Attendance</label>
-            <select
-              value={attendance}
-              onChange={(e) => setAttendance(e.target.value)}
-            >
-              <option value="pending">Pending</option>
-              <option value="present">Present</option>
-              <option value="absent">Absent</option>
-            </select>
-
-            {attendance === "present" && (
-              <>
-                <label>Rating</label>
-                <select
-                  value={rating}
-                  onChange={(e) => setRating(e.target.value)}
-                >
-                  <option value="">Select</option>
-                  <option value="5">⭐⭐⭐⭐⭐</option>
-                  <option value="4">⭐⭐⭐⭐</option>
-                  <option value="3">⭐⭐⭐</option>
-                  <option value="2">⭐⭐</option>
-                  <option value="1">⭐</option>
-                </select>
-              </>
+        {/* ══════════════ WORKERS VIEW ══════════════ */}
+        {selectedSite && (
+          <>
+            {/* Stats strip */}
+            {workers.length > 0 && (
+              <div className="sa-stats-strip">
+                {[
+                  { icon: "👥", num: workers.length, lbl: "Total"   },
+                  { icon: "✅", num: presentCount,   lbl: "Present" },
+                  { icon: "❌", num: absentCount,    lbl: "Absent"  },
+                  { icon: "⏳", num: pendingCount,   lbl: "Pending" },
+                ].map(s => (
+                  <div className="sa-stat-card" key={s.lbl}>
+                    <span className="sa-stat-icon">{s.icon}</span>
+                    <span className="sa-stat-num">{s.num}</span>
+                    <span className="sa-stat-lbl">{s.lbl}</span>
+                  </div>
+                ))}
+              </div>
             )}
 
-            <div className="modal-buttons">
-              <button className="save-btn" onClick={handleSubmit}>
-                Save
-              </button>
+            {loadingWorkers && (
+              <div className="sa-loading">
+                <div className="sa-spinner" />
+                <p>Loading workers…</p>
+              </div>
+            )}
 
-              <button
-                className="close-btn"
-                onClick={() => setSelectedWorker(null)}
-              >
-                Close
+            {!loadingWorkers && workers.length === 0 && (
+              <div className="sa-empty">
+                <div className="sa-empty-icon">👷</div>
+                <h3>No workers assigned</h3>
+                <p>Workers booked for this site will appear here.</p>
+              </div>
+            )}
+
+            {!loadingWorkers && workers.length > 0 && (
+              <div className="sa-workers-grid">
+                {workers.map((w) => {
+                  const att = w.attendance || "pending";
+                  const meta = attendanceMeta[att] || attendanceMeta.pending;
+                  return (
+                    <div
+                      key={w.booking_id}
+                      className={`sa-worker-card att-${meta.cls}`}
+                      onClick={() => openWorker(w)}
+                    >
+                      <div className="sa-worker-card-top">
+                        <div className="sa-worker-avatar">
+                          {(w.worker_name || "W")[0].toUpperCase()}
+                        </div>
+                        <span className={`sa-att-badge ${meta.cls}`}>
+                          {meta.icon} {meta.label}
+                        </span>
+                      </div>
+
+                      <div className="sa-worker-name">{w.worker_name}</div>
+                      <div className="sa-worker-role">{w.role?.replace(/_/g, " ")}</div>
+
+                      <div className="sa-worker-details">
+                        <span>📞 {w.phone}</span>
+                        <span>📍 {w.location}</span>
+                        <span>💰 ₹{w.salary || 0}</span>
+                        {w.rating && <span>⭐ {w.rating}/5</span>}
+                      </div>
+
+                      <div className="sa-worker-edit-hint">Tap to update →</div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </>
+        )}
+      </div>
+
+      {/* ══════════════ MODAL ══════════════ */}
+      {selectedWorker && (
+        <div className="sa-overlay" onClick={(e) => e.target === e.currentTarget && setSelectedWorker(null)}>
+          <div className="sa-modal">
+
+            {/* Modal header */}
+            <div className="sa-modal-header">
+              <div className="sa-modal-avatar">
+                {(selectedWorker.worker_name || "W")[0].toUpperCase()}
+              </div>
+              <div className="sa-modal-title-wrap">
+                <h2>{selectedWorker.worker_name}</h2>
+                <span className="sa-modal-role">{selectedWorker.role?.replace(/_/g, " ")}</span>
+              </div>
+              <button className="sa-modal-close-x" onClick={() => setSelectedWorker(null)}>✕</button>
+            </div>
+
+            <div className="sa-neural-bar" />
+
+            <div className="sa-modal-body">
+
+              {/* Info grid */}
+              <div className="sa-info-grid">
+                {[
+                  { icon: "📞", label: "Phone",    val: selectedWorker.phone },
+                  { icon: "📍", label: "Location", val: selectedWorker.location },
+                  { icon: "💰", label: "Salary",   val: `₹${selectedWorker.salary}` },
+                  { icon: "🎭", label: "Role",     val: selectedWorker.role?.replace(/_/g, " ") },
+                ].map(row => (
+                  <div className="sa-info-row" key={row.label}>
+                    <span className="sa-info-icon">{row.icon}</span>
+                    <div>
+                      <span className="sa-info-label">{row.label}</span>
+                      <span className="sa-info-val">{row.val || "—"}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Attendance toggle */}
+              <div className="sa-section-divider">Mark Attendance</div>
+              <div className="sa-att-toggle">
+                {["present", "absent", "pending"].map(opt => (
+                  <button
+                    key={opt}
+                    className={`sa-att-opt ${opt} ${attendance === opt ? "selected" : ""}`}
+                    onClick={() => setAttendance(opt)}
+                  >
+                    {attendanceMeta[opt].icon} {attendanceMeta[opt].label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Star rating */}
+              {attendance === "present" && (
+                <>
+                  <div className="sa-section-divider">Rate Worker</div>
+                  <div className="sa-star-row">
+                    {[5, 4, 3, 2, 1].map(n => (
+                      <button
+                        key={n}
+                        className={`sa-star-btn ${parseInt(rating) >= n ? "active" : ""}`}
+                        onClick={() => setRating(String(n))}
+                      >★</button>
+                    ))}
+                  </div>
+                  {rating && (
+                    <div className="sa-rating-display">{rating} / 5 stars selected</div>
+                  )}
+                </>
+              )}
+
+            </div>
+
+            {/* Footer */}
+            <div className="sa-modal-footer">
+              <button className="sa-save-btn" onClick={handleSubmit}>
+                Save Changes
+              </button>
+              <button className="sa-close-btn" onClick={() => setSelectedWorker(null)}>
+                Cancel
               </button>
             </div>
 

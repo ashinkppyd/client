@@ -1,145 +1,193 @@
-/* Font */
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800;900&display=swap');
 
-/* NAVBAR */
+/* ── Navbar Shell ──────────────────────────────── */
 .navbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 18px 40px;
-  font-family: 'Nunito', sans-serif;
-  background-color: transparent;
-  box-sizing: border-box;
+  padding: 13px 36px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: rgba(240,250,244,0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(65,193,135,0.18);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.8) inset;
 }
 
-/* LOGO */
+/* ── Logo ──────────────────────────────────────── */
 .logo {
-  font-size: 24px;
-  font-weight: 800;
-  color: #2C1E16;
+  font-size: 20px;
+  font-weight: 900;
+  color: #04260E;
   margin: 0;
+  letter-spacing: 1px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 9px;
 }
 
-/* LINKS CONTAINER */
+.logo-icon {
+  width: 33px;
+  height: 33px;
+  background: linear-gradient(135deg, #41C187, #2da96e);
+  border-radius: 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  box-shadow: 0 3px 10px rgba(65,193,135,0.4);
+}
+
+.logo span { color: #41C187; }
+
+/* ── Centre Nav Links ──────────────────────────── */
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 2px;
 }
 
-/* RIGHT SIDE GROUP (IMPORTANT) */
-.nav-right {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-/* LINKS */
 .nav-links a {
   text-decoration: none;
-  color: #4A3A31;
-  font-size: 14px;
+  color: #2d6e47;
+  font-size: 13.5px;
   font-weight: 600;
-  padding: 8px 16px;
-  border-radius: 25px;
-  transition: all 0.25s ease;
+  padding: 7px 14px;
+  border-radius: 100px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
-/* Hover */
 .nav-links a:hover {
-  background-color: #FCE8D5;
-  color: #F08E28;
+  color: #04260E;
+  background: rgba(65,193,135,0.12);
 }
 
+/* AI Service special link */
 .nav-links .ai-nav-link {
-  color: #2C1E16;
-  border: 1px solid rgba(240, 142, 40, 0.28);
-  background: linear-gradient(135deg, #FFF8EF 0%, #FFE8CA 100%);
-  box-shadow: 0 8px 22px rgba(240, 142, 40, 0.16);
+  color: #1a6b40;
+  background: rgba(65,193,135,0.12);
+  border: 1px solid rgba(65,193,135,0.3);
 }
 
 .nav-links .ai-nav-link:hover {
-  color: #ffffff;
-  background: linear-gradient(135deg, #F08E28 0%, #C76312 100%);
-  transform: translateY(-1px);
+  background: rgba(65,193,135,0.2);
+  color: #04260E;
 }
 
-/* ACTIVE HOME BUTTON */
-.nav-links a:first-child {
-
-  color:  #4A3A31;
-}
-
-.nav-links a:first-child:hover {
-  background-color: #D97A1E;
-}
-
-/* PROFILE */
-.profile-link {
+/* ── Right Side ────────────────────────────────── */
+.nav-right {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 14px !important;
-  background: transparent !important;
 }
 
-/* PROFILE IMAGE */
-.nav-profile-img {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #F08E28;
+/* Login link — ghost style */
+.nav-links-right a.login-link,
+.nav-right a.login-link {
+  text-decoration: none;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #2d6e47;
+  padding: 8px 16px;
+  border-radius: 100px;
+  border: 1px solid rgba(65,193,135,0.35);
+  transition: all 0.2s ease;
 }
 
-/* 🔔 NOTIFICATION BELL ALIGNMENT */
+.nav-links-right a.login-link:hover,
+.nav-right a.login-link:hover {
+  background: rgba(65,193,135,0.1);
+  color: #04260E;
+}
+
+/* Company Register — primary CTA */
+.nav-right a.register-btn,
+.nav-links-right a.register-btn {
+  text-decoration: none;
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #fff;
+  padding: 9px 20px;
+  border-radius: 100px;
+  background: linear-gradient(135deg, #41C187, #2da96e);
+  box-shadow: 0 4px 14px rgba(65,193,135,0.4);
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+
+.nav-right a.register-btn:hover,
+.nav-links-right a.register-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 7px 20px rgba(65,193,135,0.5);
+}
+
+/* Notification bell */
 .notification-wrapper {
   display: flex;
   align-items: center;
 }
 
-/* Make bell visually match navbar */
 .nb-bell {
-  font-size: 18px;
-  padding: 6px;
-  border-radius: 50%;
-  transition: background 0.2s ease, transform 0.2s ease;
+  font-size: 17px;
+  padding: 7px 9px;
+  border-radius: 100px;
+  border: 1px solid rgba(65,193,135,0.3);
+  background: rgba(255,255,255,0.65);
+  color: #2d6e47;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
 }
 
 .nb-bell:hover {
-  background: #FCE8D5;
-  transform: scale(1.1);
+  background: rgba(65,193,135,0.12);
+  border-color: rgba(65,193,135,0.4);
 }
 
-/* BADGE */
-.nb-badge {
-  font-size: 10px;
+.nb-badge { font-size: 10px; }
+.bell-icon { display: none !important; }
+
+/* Profile link */
+.profile-link {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  text-decoration: none;
+  color: #04260E;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 100px;
+  border: 1px solid rgba(65,193,135,0.3);
+  background: rgba(255,255,255,0.65);
+  backdrop-filter: blur(8px);
+  transition: all 0.2s ease;
 }
 
-/* REMOVE OLD BELL (IMPORTANT) */
-.bell-icon {
-  display: none !important;
+.profile-link:hover {
+  background: rgba(65,193,135,0.1);
+  border-color: rgba(65,193,135,0.45);
 }
 
-/* RESPONSIVE */
+.nav-profile-img {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #41C187;
+}
+
+/* ── Responsive ────────────────────────────────── */
+@media (max-width: 1100px) {
+  .nav-links { display: none; }
+  .navbar { padding: 13px 20px; }
+}
+
 @media (max-width: 768px) {
-  .navbar {
-    flex-direction: column;
-    gap: 15px;
-    padding: 15px 20px;
-  }
-
-  .nav-links {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-  }
-
-  .nav-right {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
+  .navbar { flex-wrap: wrap; gap: 8px; padding: 12px 16px; }
+  .nav-right { flex-wrap: wrap; gap: 6px; }
 }

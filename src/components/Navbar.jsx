@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import API from "../api/axios";
-import NotificationBell from "./NotificationBell"; 
+import NotificationBell from "./NotificationBell";
 import "./Navbar.css";
 
 export default function Navbar() {
@@ -10,60 +10,54 @@ export default function Navbar() {
 
   useEffect(() => {
     API.get("/me/", { withCredentials: true })
-      .then((res) => {
-        setUser(res.data);
-      })
-      .catch(() => {
-        setUser(null);
-      });
+      .then((res) => setUser(res.data))
+      .catch(() => setUser(null));
   }, [location.pathname]);
 
   return (
     <nav className="navbar">
-      <h2 className="logo">SERVIO</h2>
 
+      {/* ── Logo ── */}
+      <h2 className="logo">
+        <span className="logo-icon">🍽️</span>
+        SER<span>VIO</span>
+      </h2>
+
+      {/* ── Centre Links ── */}
       <div className="nav-links">
         <Link to="/">Home</Link>
-        <Link to="/ai-service" className="ai-nav-link">AI Service</Link>
+        <Link to="/ai-service" className="ai-nav-link">✦ AI Service</Link>
 
-        
-        {!user && (
+        {user?.role === "worker" && (
           <>
-            <Link to="/login">Login</Link>
-            <Link to="/company-register">Company Register</Link>
+            <Link to="/sites">Sites</Link>
+            <Link to="/site-report">Site Report</Link>
+            <Link to="/payment-report">Payment Report</Link>
           </>
         )}
 
-        
-        {user && (
-          <div className="nav-right">
-            
-           
-            {user.role === "worker" && (
-              <>
-                <Link to="/sites">Sites</Link>
-                <Link to="/site-report">Site Report</Link>
-                <Link to="/payment-report">Payment Report</Link>
-              </>
-            )}
+        {user?.role === "company" && (
+          <>
+            <Link to="/dashboard">Dashboard</Link>
+            <Link to="/create-site">Create Site</Link>
+            <Link to="/bookings">Bookings</Link>
+            <Link to="/site-attendance">Site Attendance</Link>
+          </>
+        )}
 
-            
-            {user.role === "company" && (
-              <>
-                <Link to="/dashboard">Dashboard</Link>
-                <Link to="/create-site">Create Site</Link>
-                <Link to="/bookings">Bookings</Link>
-                <Link to="/site-attendance">Site Attendance</Link>
-              </>
-            )}
+        {user && <Link to="/chat">💬 Chat</Link>}
+      </div>
 
-            
-            <Link to="/chat">💬 Chat</Link>
-
-            
+      {/* ── Right Side ── */}
+      <div className="nav-right">
+        {!user ? (
+          <>
+            <Link to="/login" className="login-link">Login</Link>
+            <Link to="/company-register" className="register-btn">Company Register</Link>
+          </>
+        ) : (
+          <>
             <NotificationBell />
-
-            
             <Link to="/profile" className="profile-link">
               {user.profile_image ? (
                 <img
@@ -76,10 +70,10 @@ export default function Navbar() {
               )}
               {user.username}
             </Link>
-
-          </div>
+          </>
         )}
       </div>
+
     </nav>
   );
 }

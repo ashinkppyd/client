@@ -54,6 +54,8 @@ if ("serviceWorker" in navigator) {
         <Route path="/company-register" element={<CompanyRegister />} />
         <Route path="/otp" element={<OtpPage />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/change-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:uid/:token" element={<ResetPassword />} />
         <Route path="/reset-password/:uid/:token/" element={<ResetPassword />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/mfa" element={<MFA />} />

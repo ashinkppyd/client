@@ -4,7 +4,7 @@ import API from "../api/axios";
 import GoogleAuth from "./GoogleAuth";
 import "./Login.css";
 import { toast } from "react-toastify";
-import { getFCMToken } from "../../firebase";  
+import { getFCMToken } from "../../firebase";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -26,8 +26,6 @@ export default function Login() {
         withCredentials: true,
       });
 
-      console.log(res.data);
-
       if (res.data.mfa_required) {
         toast.info("Enter MFA code 🔐");
         navigate("/mfa");
@@ -37,21 +35,9 @@ export default function Login() {
       toast.success("Login successful 🎉");
 
       try {
-        console.log("Attempting to retrieve FCM token after login...");
         const token = await getFCMToken();
-        console.log("FCM Token retrieved:", token);
         if (token) {
-          console.log("FCM Token:", token);
-
-          await API.post(
-            "/save-token/",
-            { token },
-            { withCredentials: true }
-          );
-
-          console.log("Token saved to backend ✅");
-        } else {
-          console.log("No FCM token received");
+          await API.post("/save-token/", { token }, { withCredentials: true });
         }
       } catch (err) {
         console.log("FCM Error:", err);
@@ -60,49 +46,86 @@ export default function Login() {
       window.location.href = "/";
 
     } catch (err) {
-      console.log("LOGIN ERROR:", err.response?.data);
       toast.error(err.response?.data?.error || "Login failed");
     }
   };
 
   return (
-    <div className="login-container">
-      <h2>Welcome Back</h2>
+    <div className="login-page-wrapper">
+      <div className="login-blob-tr" />
+      <div className="login-blob-bl" />
 
-      <form onSubmit={handleLogin}>
-        <input
-          name="username"
-          placeholder="Username or Email"
-          onChange={handleChange}
-          required
-        />
+      {/* ── Split Card ── */}
+      <div className="login-card">
 
-        <input
-          name="password"
-          type="password"
-          placeholder="Password"
-          onChange={handleChange}
-          required
-        />
+        {/* LEFT — Form */}
+        <div className="login-form-side">
+          <div className="login-logo">
+            <div className="login-logo-icon">🍽️</div>
+            <span className="login-logo-text">SER<span>VIO</span></span>
+          </div>
 
-        <button type="submit">Login</button>
+          <h2>Welcome back</h2>
+          <p className="login-subheading">Sign in to your account to continue</p>
 
-        <div className="login-divider">or login with</div>
-
-        <div className="google-auth-wrapper">
           <GoogleAuth />
+
+          <div className="login-divider">or sign in with email</div>
+
+          <form onSubmit={handleLogin}>
+            <div className="input-group">
+              <label>Username or Email</label>
+              <input
+                name="username"
+                placeholder="Enter your username or email"
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="input-group">
+              <label>
+                Password
+                <span className="login-forgot" onClick={() => navigate("/forgot-password")}>
+                  Forgot password?
+                </span>
+              </label>
+              <input
+                name="password"
+                type="password"
+                placeholder="••••••••"
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <button type="submit">Sign In →</button>
+          </form>
+
+          <div className="login-footer">
+            <span onClick={() => navigate("/user-register")}>Create Account</span>
+            <span onClick={() => navigate("/company-register")}>Register Company</span>
+          </div>
         </div>
 
-        <div className="login-footer">
-          <span onClick={() => navigate("/user-register")}>
-            Create Account
-          </span>
-
-          <span onClick={() => navigate("/forgot-password")}>
-            Forgot Password?
-          </span>
+        {/* RIGHT — Slide Panel */}
+        <div className="login-panel-side">
+          <div className="login-panel-content">
+            <div className="login-panel-icon">🍽️</div>
+            <div className="login-panel-title">New to<br />SERVIO?</div>
+            <p className="login-panel-sub">
+              Set up your account in seconds and connect with the best service professionals around you.
+            </p>
+            <button className="login-panel-btn" onClick={() => navigate("/user-register")}>
+              Create Account →
+            </button>
+            <button className="login-panel-btn-ghost" onClick={() => navigate("/company-register")}>
+              Register a Company
+            </button>
+          </div>
         </div>
-      </form>
+
+      </div>
     </div>
   );
 }
