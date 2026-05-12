@@ -29,13 +29,25 @@ function WorkerSites() {
     setLoading(false);
   };
 
-  const hasActiveBooking = () =>
-    Object.values(bookingMap).includes("pending") ||
-    Object.values(bookingMap).includes("approved");
+  const hasActiveBooking = (siteDate) =>
+    Object.entries(bookingMap).some(([slotId, status]) => {
+      if (status !== "pending" && status !== "approved") return false;
+      if (!siteDate) return true;
+
+      return sites.some(
+        (site) =>
+          site.date === siteDate &&
+          site.slots?.some((slot) => String(slot.id) === String(slotId))
+      );
+    });
 
   const apply = async (slotId) => {
-    if (hasActiveBooking()) {
-      toast.error("You can only apply for one role at a time ❌");
+    const site = sites.find((item) =>
+      item.slots?.some((slot) => slot.id === slotId)
+    );
+
+    if (site && hasActiveBooking(site.date)) {
+      toast.error("You can only apply for one role on the same day ❌");
       return;
     }
     setApplyingId(slotId);
@@ -66,7 +78,7 @@ function WorkerSites() {
       applyingId === slot.id ||
       status === "pending" ||
       status === "approved" ||
-      hasActiveBooking()
+      hasActiveBooking(slot.site_date)
     );
   };
 
@@ -192,8 +204,9 @@ function WorkerSites() {
                 {/* Slot Cards */}
                 <div className="job-slots-grid">
                   {site.slots?.map((slot) => {
+                    const slotWithDate = { ...slot, site_date: site.date };
                     const status = bookingMap[slot.id];
-                    const { icon, text } = getButtonLabel(slot);
+                    const { icon, text } = getButtonLabel(slotWithDate);
                     const isAvail = slot.available_slots > 0;
 
                     return (
@@ -226,7 +239,7 @@ function WorkerSites() {
                         <button
                           className={`apply-btn ${status || ""}`}
                           onClick={() => apply(slot.id)}
-                          disabled={isDisabled(slot)}
+                          disabled={isDisabled(slotWithDate)}
                         >
                           {applyingId === slot.id ? (
                             "Applying…"
