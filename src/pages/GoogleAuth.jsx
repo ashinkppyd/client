@@ -22,7 +22,7 @@ export default function GoogleAuth() {
 
       toast.success("Google Login Success 🎉"); 
 
-      window.location.href = "/";
+      navigate("/", { replace: true });
 
     } catch (err) {
       console.log("GOOGLE LOGIN ERROR:", err.response?.data || err);

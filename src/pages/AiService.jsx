@@ -129,6 +129,7 @@ export default function AiService() {
         body: JSON.stringify({
           question: userQuestion,
           provider: "groq",
+          use_graph: true,
           user_id: userId,
           chat_id: CHAT_ID,
         }),
