@@ -486,6 +486,20 @@
   box-shadow: 0 8px 22px rgba(65,193,135,0.42);
 }
 
+.sa-remove-btn {
+  width: 100%;
+  background: rgba(229,57,53,0.08);
+  border: 1.5px solid rgba(229,57,53,0.25);
+  color: #c62828; padding: 12px; border-radius: 12px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px; font-weight: 800;
+  cursor: pointer; transition: all 0.2s;
+}
+.sa-remove-btn:hover {
+  background: rgba(229,57,53,0.14);
+  border-color: rgba(229,57,53,0.42);
+}
+
 .sa-close-btn {
   width: 100%;
   background: rgba(240,250,244,0.8);

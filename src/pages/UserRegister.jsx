@@ -61,31 +61,31 @@ export default function UserRegister() {
             <div className="user-row">
               <div className="user-field">
                 <label>Username</label>
-                <input name="username" placeholder="arjun_k" onChange={handleChange} required />
+                <input name="username" placeholder="username" onChange={handleChange} required />
               </div>
               <div className="user-field">
                 <label>Phone Number</label>
-                <input name="phone" placeholder="+91 98765..." onChange={handleChange} required />
+                <input name="phone" placeholder="phone" onChange={handleChange} required />
               </div>
             </div>
 
             <div className="user-field full">
               <label>Email Address</label>
-              <input name="email" type="email" placeholder="you@email.com" onChange={handleChange} required />
+              <input name="email" type="email" placeholder="Email" onChange={handleChange} required />
             </div>
 
             <div className="user-row-3">
               <div className="user-field">
                 <label>State</label>
-                <input name="state" placeholder="Kerala" onChange={handleChange} required />
+                <input name="state" placeholder="State" onChange={handleChange} required />
               </div>
               <div className="user-field">
                 <label>District</label>
-                <input name="district" placeholder="Ernakulam" onChange={handleChange} required />
+                <input name="district" placeholder="District" onChange={handleChange} required />
               </div>
               <div className="user-field">
                 <label>Place</label>
-                <input name="place" placeholder="Kochi" onChange={handleChange} required />
+                <input name="place" placeholder="Place" onChange={handleChange} required />
               </div>
             </div>
 

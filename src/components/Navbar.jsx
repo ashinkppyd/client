@@ -4,21 +4,6 @@ import API from "../api/axios";
 import NotificationBell from "./NotificationBell";
 import "./Navbar.css";
 
-function LogoIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
-      <path
-        d="M7 3v8M11 3v8M7 7h4M9 11v10M16 3v8a3 3 0 0 0 3 3V3"
-        fill="none"
-        stroke="#ffffff"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
 function ChatIcon() {
   return (
     <svg width="17" height="17" viewBox="0 0 24 24" aria-hidden="true">
@@ -64,8 +49,8 @@ export default function Navbar() {
 
       {/* Logo */}
       <h2 className="logo">
-        <span className="logo-icon"><LogoIcon /></span>
-        SER<span>VIO</span>
+        <span className="logo-icon">🍽️</span>
+        <span className="logo-text">SER<span>VIO</span></span>
       </h2>
 
       {/* Centre Links */}

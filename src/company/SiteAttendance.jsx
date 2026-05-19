@@ -60,6 +60,20 @@ const SiteAttendance = () => {
     }
   };
 
+  const removeWorker = async () => {
+    if (!window.confirm(`Remove ${selectedWorker.worker_name} from this site?`)) return;
+
+    try {
+      await api.post(`update/${selectedWorker.booking_id}/`, { status: "rejected" });
+      toast.success("Worker removed successfully ✅");
+      loadWorkers(selectedSite);
+      setSelectedWorker(null);
+    } catch (err) {
+      console.log(err.response?.data);
+      toast.error("Remove worker failed ❌");
+    }
+  };
+
   const attendanceMeta = {
     present: { label: "Present", icon: "✅", cls: "present" },
     absent:  { label: "Absent",  icon: "❌", cls: "absent"  },
@@ -284,6 +298,9 @@ const SiteAttendance = () => {
             <div className="sa-modal-footer">
               <button className="sa-save-btn" onClick={handleSubmit}>
                 Save Changes
+              </button>
+              <button className="sa-remove-btn" onClick={removeWorker}>
+                Remove Worker
               </button>
               <button className="sa-close-btn" onClick={() => setSelectedWorker(null)}>
                 Cancel

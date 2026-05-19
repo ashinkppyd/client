@@ -516,8 +516,22 @@
   cursor: not-allowed;
 }
 
+.apply-btn.waitlist-pending {
+  background: rgba(240, 180, 50, 0.12);
+  color: #8a6a10;
+  border: 1.5px solid rgba(240, 180, 50, 0.35);
+  cursor: not-allowed;
+}
+
 /* Approved */
 .apply-btn.approved {
+  background: rgba(65, 193, 135, 0.12);
+  color: #1a7a4e;
+  border: 1.5px solid rgba(65, 193, 135, 0.35);
+  cursor: not-allowed;
+}
+
+.apply-btn.waitlist-approved {
   background: rgba(65, 193, 135, 0.12);
   color: #1a7a4e;
   border: 1.5px solid rgba(65, 193, 135, 0.35);

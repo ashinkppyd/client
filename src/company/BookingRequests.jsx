@@ -19,19 +19,31 @@ function BookingRequests() {
   const fetchBookings = async () => {
     setLoading(true);
     try {
-      const res = await api.get("company-bookings/");
-      setBookings(res.data);
+      const [bookingRes, waitlistRes] = await Promise.all([
+        api.get("company-bookings/"),
+        api.get("waitlist/company/"),
+      ]);
+      setBookings([
+        ...bookingRes.data.map((item) => ({ ...item, request_type: "booking" })),
+        ...waitlistRes.data.map((item) => ({ ...item, request_type: "waitlist" })),
+      ]);
     } catch {
       toast.error("Failed to load bookings ❌");
     }
     setLoading(false);
   };
 
-  const updateStatus = async (id, status) => {
+  const updateStatus = async (item, status) => {
     try {
-      await api.post(`update/${id}/`, { status });
-      toast.success(`Booking ${status} ✅`);
+      if (item.request_type === "waitlist") {
+        await api.post(`waitlist/update/${item.id}/`, { status });
+        toast.success(`Whitelist ${status} ✅`);
+      } else {
+        await api.post(`update/${item.id}/`, { status });
+        toast.success(`Booking ${status} ✅`);
+      }
       fetchBookings();
+      setSelectedBooking(null);
     } catch {
       toast.error("Status update failed ❌");
     }
@@ -129,7 +141,7 @@ function BookingRequests() {
         {!loading && bookings.length > 0 && (
           <div className="br-grid">
             {bookings.map((b) => (
-              <div key={b.id} className={`br-card status-${b.status}`}>
+              <div key={`${b.request_type}-${b.id}`} className={`br-card status-${b.status}`}>
 
                 {/* Card header */}
                 <div className="br-card-top">
@@ -139,9 +151,13 @@ function BookingRequests() {
                   <span className="br-card-id">#{b.id}</span>
                 </div>
 
+                {b.request_type === "waitlist" && (
+                  <div className="br-waitlist-tag">Whitelist Request</div>
+                )}
+
                 {/* Position */}
                 <div className="br-card-position">
-                  {b.slot_position?.replace(/_/g, " ")}
+                  {(b.slot_position || b.role)?.replace(/_/g, " ")}
                 </div>
 
                 {/* Worker preview */}
@@ -198,7 +214,7 @@ function BookingRequests() {
                 {[
                   { icon: "📞", label: "Phone",    val: selectedBooking.phone },
                   { icon: "📍", label: "Location", val: selectedBooking.location },
-                  { icon: "🎭", label: "Role",     val: selectedBooking.slot_position?.replace(/_/g, " ") },
+                  { icon: "🎭", label: "Role",     val: (selectedBooking.slot_position || selectedBooking.role)?.replace(/_/g, " ") },
                   { icon: "🪪", label: "Booking",  val: `#${selectedBooking.id}` },
                 ].map(row => (
                   <div className="br-info-row" key={row.label}>
@@ -213,7 +229,9 @@ function BookingRequests() {
 
               {/* Salary highlight */}
               <div className="br-salary-card">
-                <span className="br-salary-label">Salary</span>
+                <span className="br-salary-label">
+                  {selectedBooking.request_type === "waitlist" ? "Whitelist" : "Salary"}
+                </span>
                 <span className="br-salary-amount">₹{selectedBooking.salary}</span>
               </div>
 
@@ -241,10 +259,10 @@ function BookingRequests() {
               {/* ── Approve / Reject ── */}
               {selectedBooking.status === "pending" && (
                 <div className="br-modal-actions">
-                  <button className="br-btn-approve" onClick={() => updateStatus(selectedBooking.id, "approved")}>
-                    ✓ Approve
+                  <button className="br-btn-approve" onClick={() => updateStatus(selectedBooking, "approved")}>
+                    ✓ {selectedBooking.request_type === "waitlist" ? "Allow Worker" : "Approve"}
                   </button>
-                  <button className="br-btn-reject" onClick={() => updateStatus(selectedBooking.id, "rejected")}>
+                  <button className="br-btn-reject" onClick={() => updateStatus(selectedBooking, "rejected")}>
                     ✕ Reject
                   </button>
                 </div>

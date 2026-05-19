@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 function WorkerSites() {
   const [sites, setSites] = useState([]);
   const [bookingMap, setBookingMap] = useState({});
+  const [waitlistMap, setWaitlistMap] = useState({});
   const [loading, setLoading] = useState(false);
   const [applyingId, setApplyingId] = useState(null);
 
@@ -22,6 +23,7 @@ function WorkerSites() {
       const res = await api.get("all-sites/");
       setSites(res.data.sites || []);
       setBookingMap(res.data.user_bookings || {});
+      setWaitlistMap(res.data.user_waitlist || {});
     } catch (err) {
       console.log("ERROR:", err.response?.data);
       toast.error("Failed to load sites ❌");
@@ -45,11 +47,21 @@ function WorkerSites() {
     const site = sites.find((item) =>
       item.slots?.some((slot) => slot.id === slotId)
     );
+    const slot = site?.slots?.find((item) => item.id === slotId);
 
     if (site && hasActiveBooking(site.date)) {
       toast.error("You can only apply for one role on the same day ❌");
       return;
     }
+
+    const confirmed = window.confirm(
+      `Do you want to apply for ${slot?.position?.replace(/_/g, " ") || "this role"} at ${site?.name || "this site"}?`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
     setApplyingId(slotId);
     try {
       await api.post("apply/", { slot: slotId });
@@ -61,23 +73,70 @@ function WorkerSites() {
     setApplyingId(null);
   };
 
+  const applyWaitlist = async (slotId) => {
+    const site = sites.find((item) =>
+      item.slots?.some((slot) => slot.id === slotId)
+    );
+    const slot = site?.slots?.find((item) => item.id === slotId);
+
+    if (site && hasActiveBooking(site.date)) {
+      toast.error("You can only apply for one role on the same day ❌");
+      return;
+    }
+
+    const confirmed = window.confirm(
+      `Join the waitlist for ${slot?.position?.replace(/_/g, " ") || "this role"} at ${site?.name || "this site"}?`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setApplyingId(slotId);
+    try {
+      await api.post("waitlist/apply/", { slot: slotId });
+      toast.success("Waitlist request sent ✅");
+      fetchSites();
+    } catch (err) {
+      console.log("WAITLIST ERROR:", err.response?.data || err.message);
+      toast.error(
+        err.response?.data?.error ||
+        err.response?.data?.detail ||
+        "Waitlist request failed ❌"
+      );
+    }
+    setApplyingId(null);
+  };
+
   const getButtonLabel = (slot) => {
     const status = bookingMap[slot.id];
+    const waitlistStatus = waitlistMap[slot.id];
     if (status === "pending")  return { icon: "⏳", text: "Pending Review" };
     if (status === "approved") return { icon: "✓",  text: "Approved" };
     if (status === "rejected") return { icon: "✕",  text: "Rejected" };
+    if (waitlistStatus === "pending") return { icon: "⏳", text: "Waitlist Pending" };
+    if (waitlistStatus === "approved") return { icon: "✓", text: "Waitlist Approved" };
+    if (waitlistStatus === "rejected") return { icon: "✕", text: "Waitlist Rejected" };
     return slot.available_slots > 0
       ? { icon: "→", text: "Apply Now" }
-      : { icon: "—", text: "Position Full" };
+      : { icon: "+", text: "Join Waitlist" };
+  };
+
+  const getButtonStatus = (slot) => {
+    if (bookingMap[slot.id]) return bookingMap[slot.id];
+    if (waitlistMap[slot.id]) return `waitlist-${waitlistMap[slot.id]}`;
+    return "";
   };
 
   const isDisabled = (slot) => {
     const status = bookingMap[slot.id];
+    const waitlistStatus = waitlistMap[slot.id];
     return (
-      slot.available_slots <= 0 ||
       applyingId === slot.id ||
       status === "pending" ||
       status === "approved" ||
+      waitlistStatus === "pending" ||
+      waitlistStatus === "approved" ||
       hasActiveBooking(slot.site_date)
     );
   };
@@ -206,6 +265,7 @@ function WorkerSites() {
                   {site.slots?.map((slot) => {
                     const slotWithDate = { ...slot, site_date: site.date };
                     const status = bookingMap[slot.id];
+                    const buttonStatus = getButtonStatus(slot);
                     const { icon, text } = getButtonLabel(slotWithDate);
                     const isAvail = slot.available_slots > 0;
 
@@ -237,8 +297,10 @@ function WorkerSites() {
 
                         {/* Apply Button */}
                         <button
-                          className={`apply-btn ${status || ""}`}
-                          onClick={() => apply(slot.id)}
+                          className={`apply-btn ${buttonStatus}`}
+                          onClick={() =>
+                            isAvail ? apply(slot.id) : applyWaitlist(slot.id)
+                          }
                           disabled={isDisabled(slotWithDate)}
                         >
                           {applyingId === slot.id ? (

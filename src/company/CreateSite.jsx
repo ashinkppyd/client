@@ -144,19 +144,7 @@ function CreateSite() {
               </div>
             </div>
 
-            {/* Tips */}
-            <div className="cs-tips">
-              <div className="cs-tip-title">💡 Quick Tips</div>
-              {[
-                "Set reporting time 30 min before event start",
-                "Add at least one slot per category",
-                "You can edit details after publishing",
-              ].map((tip, i) => (
-                <div key={i} className="cs-tip-item">
-                  <span className="cs-tip-check">✓</span> {tip}
-                </div>
-              ))}
-            </div>
+           
 
           </div>
         </div>

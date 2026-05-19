@@ -201,63 +201,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ─── PRICING ─── */}
-      <section className="section pricing-section">
-        <div className="section-inner">
-          <div className="section-label">PRICING</div>
-          <h2 className="section-title">Simple, transparent pricing</h2>
-          <p className="section-sub">No hidden fees. Scale as you grow.</p>
-          <div className="pricing-grid">
-
-            {/* Starter */}
-            <div className="pricing-card">
-              <div className="pricing-tier">STARTER</div>
-              <div className="pricing-price"><span className="price-big">Free</span></div>
-              <p className="pricing-desc">Perfect for small private events</p>
-              <ul className="pricing-features">
-                <li><span className="pf-check">✓</span> Up to 3 events/month</li>
-                <li><span className="pf-check">✓</span> 100 guests per event</li>
-                <li><span className="pf-check">✓</span> Basic analytics</li>
-                <li><span className="pf-check">✓</span> Email support</li>
-              </ul>
-              <Link to="/user-register" className="pricing-btn pricing-btn-outline">Get Started</Link>
-            </div>
-
-            {/* Professional — featured */}
-            <div className="pricing-card pricing-card-featured">
-              <div className="pricing-popular-badge">Most Popular</div>
-              <div className="pricing-tier">PROFESSIONAL</div>
-              <div className="pricing-price"><span className="price-big">₹4,999</span><span className="price-mo">/mo</span></div>
-              <p className="pricing-desc">For growing event organizers</p>
-              <ul className="pricing-features">
-                <li><span className="pf-check">✓</span> Unlimited events</li>
-                <li><span className="pf-check">✓</span> 5,000 guests per event</li>
-                <li><span className="pf-check">✓</span> Advanced analytics</li>
-                <li><span className="pf-check">✓</span> Priority support</li>
-                <li><span className="pf-check">✓</span> AI Scheduling</li>
-                <li><span className="pf-check">✓</span> Custom branding</li>
-              </ul>
-              <Link to="/company-register" className="pricing-btn pricing-btn-primary">Start Free Trial</Link>
-            </div>
-
-            {/* Enterprise */}
-            <div className="pricing-card">
-              <div className="pricing-tier">ENTERPRISE</div>
-              <div className="pricing-price"><span className="price-big">Custom</span></div>
-              <p className="pricing-desc">For large organizations</p>
-              <ul className="pricing-features">
-                <li><span className="pf-check">✓</span> Unlimited everything</li>
-                <li><span className="pf-check">✓</span> Dedicated support</li>
-                <li><span className="pf-check">✓</span> SLA guarantee</li>
-                <li><span className="pf-check">✓</span> Custom integrations</li>
-                <li><span className="pf-check">✓</span> On-premise option</li>
-              </ul>
-              <Link to="/login" className="pricing-btn pricing-btn-outline">Contact Sales</Link>
-            </div>
-
-          </div>
-        </div>
-      </section>
+      
 
       {/* ─── TESTIMONIALS ─── */}
       <section className="section testimonials-section">

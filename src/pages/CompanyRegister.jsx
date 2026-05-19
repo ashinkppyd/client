@@ -77,32 +77,32 @@ export default function CompanyRegister() {
           <form onSubmit={handleSubmit}>
             <div className="company-field full">
               <label>Company Name</label>
-              <input name="company_name" placeholder="Acme Hospitality Pvt. Ltd." onChange={handleChange} required />
+              <input name="company_name" placeholder="company name" onChange={handleChange} required />
             </div>
 
             <div className="company-row">
               <div className="company-field">
                 <label>Email Address</label>
-                <input name="email" type="email" placeholder="company@email.com" onChange={handleChange} required />
+                <input name="email" type="email" placeholder="Email" onChange={handleChange} required />
               </div>
               <div className="company-field">
                 <label>Phone Number</label>
-                <input name="phone" placeholder="+91 98765..." onChange={handleChange} required />
+                <input name="phone" placeholder="Phone" onChange={handleChange} required />
               </div>
             </div>
 
             <div className="company-row-3">
               <div className="company-field">
                 <label>State</label>
-                <input name="state" placeholder="Kerala" onChange={handleChange} required />
+                <input name="state" placeholder="State" onChange={handleChange} required />
               </div>
               <div className="company-field">
                 <label>District</label>
-                <input name="district" placeholder="Ernakulam" onChange={handleChange} required />
+                <input name="district" placeholder="District" onChange={handleChange} required />
               </div>
               <div className="company-field">
                 <label>Place</label>
-                <input name="place" placeholder="Kochi" onChange={handleChange} required />
+                <input name="place" placeholder="Place" onChange={handleChange} required />
               </div>
             </div>
 
