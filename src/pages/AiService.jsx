@@ -19,11 +19,9 @@ const SUGGESTION_CHIPS = [
 ];
 
 const getAiUrls = () => {
-  if (import.meta.env.VITE_AI_SERVICE_URL) {
-    return [import.meta.env.VITE_AI_SERVICE_URL];
-  }
-  const host = window.location.hostname || "localhost";
-  return [`http://${host}:${AI_PORT}`, `http://127.0.0.1:${AI_PORT}`];
+  return [
+    import.meta.env.VITE_AI_SERVICE_URL || "https://api.servio-events.online/ai"
+  ];
 };
 
 async function fetchJson(path, options = {}) {
