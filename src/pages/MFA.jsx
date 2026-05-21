@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import API from "../api/axios";
 import { toast } from "react-toastify";
 import "./MFA.css";
@@ -6,6 +7,7 @@ import "./MFA.css";
 export default function MFA() {
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleVerify = async () => {
     if (!otp || otp.length !== 6) {
@@ -24,7 +26,7 @@ export default function MFA() {
       console.log(res.data);
 
       toast.success("Login success 🔐");
-      window.location.href = "/";
+      navigate("/", { replace: true });
 
     } catch (err) {
       console.log("MFA ERROR:", err.response?.data);

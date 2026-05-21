@@ -1,55 +1,77 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import API from "../api/axios";
+import { toast } from "react-toastify";
 import "./ForgotPassword.css";
 
 export default function ForgotPassword() {
-  const [email, setEmail] = useState("");
-  const navigate = useNavigate();
+  const location = useLocation();
+  const [email, setEmail] = useState(location.state?.email || "");
+  const [sent, setSent] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setLoading(true);
     try {
-      await API.post(
-        "/forgot-password/",
-        { email },
-        {
-          withCredentials: true, 
-        }
-      );
-
-      alert("Reset link sent to your email 📧");
-
+      await API.post("/forgot-password/", { email }, { withCredentials: true });
+      setSent(true);
+      toast.success("Reset link sent! Check your inbox 📧");
     } catch (err) {
-      console.log(err.response?.data);
-      alert(err.response?.data?.error || "Error sending reset link");
+      toast.error(err.response?.data?.error || "Error sending reset link");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="forgot-password-page">
-      <div className="forgot-container">
-        <h2>Get Help With Login ?</h2>
-        <p>
-          Enter your email address and we'll send you a link to reset your password.
-        </p>
+    <div className="forgot-page">
+      <div className="fp-blob1" />
+      <div className="fp-blob2" />
 
-        <form onSubmit={handleSubmit}>
-          <input
-            type="email"
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+      <div className="fp-card">
+        <div className="fp-badge">✦ Servio Account</div>
 
-          <button type="submit">Send Reset Link</button>
-        </form>
-
-        <span className="back-link" onClick={() => navigate("/login")}>
-          Back to Login
-        </span>
+        {!sent ? (
+          <>
+            <div className="fp-icon-circle">🔑</div>
+            <h2 className="fp-title">Forgot your <span>Password?</span></h2>
+            <p className="fp-sub">
+              No worries! Enter your email and we'll send you a reset link.
+            </p>
+            <form onSubmit={handleSubmit}>
+              <input
+                className="fp-input"
+                type="email"
+                placeholder="your@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+              <button className="fp-btn" type="submit" disabled={loading}>
+                {loading ? "Sending…" : "Send Reset Link →"}
+              </button>
+            </form>
+            <Link to="/login" className="fp-back">← Back to login</Link>
+          </>
+        ) : (
+          <>
+            <div className="fp-success-circle">✉️</div>
+            <h2 className="fp-title">Check your <span>Inbox</span></h2>
+            <p className="fp-sub">
+              We've sent a password reset link to<br />
+              <strong style={{ color: "#04260E" }}>{email}</strong>
+            </p>
+            <div className="fp-info-box">
+              <span>📌</span>
+              <span>Didn't receive it? Check your spam folder or try again.</span>
+            </div>
+            <button className="fp-btn-outline" onClick={() => setSent(false)}>
+              ↩ Try a different email
+            </button>
+            <Link to="/login" className="fp-back">← Back to login</Link>
+          </>
+        )}
       </div>
     </div>
   );

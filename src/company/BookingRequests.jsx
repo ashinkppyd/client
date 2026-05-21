@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";   
+import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import "./BookingRequests.css";
 import { toast } from "react-toastify";
@@ -10,7 +10,7 @@ function BookingRequests() {
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [rating, setRating] = useState("");
 
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchBookings();
@@ -19,50 +19,51 @@ function BookingRequests() {
   const fetchBookings = async () => {
     setLoading(true);
     try {
-      const res = await api.get("company-bookings/");
-      console.log("Bookings:", res.data); 
-      setBookings(res.data);
-    } catch (err) {
+      const [bookingRes, waitlistRes] = await Promise.all([
+        api.get("company-bookings/"),
+        api.get("waitlist/company/"),
+      ]);
+      setBookings([
+        ...bookingRes.data.map((item) => ({ ...item, request_type: "booking" })),
+        ...waitlistRes.data.map((item) => ({ ...item, request_type: "waitlist" })),
+      ]);
+    } catch {
       toast.error("Failed to load bookings ❌");
     }
     setLoading(false);
   };
 
-  const updateStatus = async (id, status) => {
+  const updateStatus = async (item, status) => {
     try {
-      await api.post(`update/${id}/`, { status });
-      toast.success(`Booking ${status} ✅`);
+      if (item.request_type === "waitlist") {
+        await api.post(`waitlist/update/${item.id}/`, { status });
+        toast.success(`Whitelist ${status} ✅`);
+      } else {
+        await api.post(`update/${item.id}/`, { status });
+        toast.success(`Booking ${status} ✅`);
+      }
       fetchBookings();
-    } catch (err) {
+      setSelectedBooking(null);
+    } catch {
       toast.error("Status update failed ❌");
     }
   };
 
   const markAttendance = async (id, value) => {
     try {
-      await api.post(`attendance/${id}/`, {
-        attendance: value,
-      });
-
+      await api.post(`attendance/${id}/`, { attendance: value });
       toast.success(`Marked ${value} ✅`);
       fetchBookings();
-      setSelectedBooking(null)
-        } catch {
+      setSelectedBooking(null);
+    } catch {
       toast.error("Attendance failed ❌");
     }
   };
 
   const submitRating = async (id) => {
-    if (!rating) {
-      toast.error("Select rating ❌");
-      return;
-    }
-
+    if (!rating) { toast.error("Select rating ❌"); return; }
     try {
-      await api.post(`rate/${id}/`, {
-        rating: rating,
-      });
-
+      await api.post(`rate/${id}/`, { rating });
       toast.success("Rated successfully ⭐");
       setRating("");
       fetchBookings();
@@ -71,194 +72,252 @@ function BookingRequests() {
       toast.error("Rating failed ❌");
     }
   };
-  console.log("Current bookings state:", bookings);
-  console.log("Selected booking:", selectedBooking);
- 
+
+  const statusMeta = {
+    pending:  { label: "Pending",  icon: "⏳" },
+    approved: { label: "Approved", icon: "✅" },
+    rejected: { label: "Rejected", icon: "❌" },
+  };
 
   return (
-    <div className="bookings-page">
-      <div className="bookings-header">
-        <h2>Booking Requests</h2>
-        <p>Manage your event staffing requests</p>
-      </div>
+    <div className="br-page">
+      {/* Background decorations — identical to CreateSite */}
+      <div className="br-blob-tr" />
+      <div className="br-blob-bl" />
+      <div className="br-dot-grid" />
 
-      <div className="bookings-container">
-        {loading && <p>Loading bookings...</p>}
+      <div className="br-inner">
 
-        {!loading && bookings.length === 0 && (
-          <div className="no-bookings">
-            No booking requests found.
+        {/* ── Page header ── */}
+        <div className="br-page-header">
+          <button className="br-back-btn" onClick={() => navigate("/dashboard")}>
+            ← Dashboard
+          </button>
+          <div className="br-header-badge">📋 Booking Management</div>
+          <h1 className="br-page-title">
+            Booking <span className="br-gradient-text">Requests</span>
+          </h1>
+          <p className="br-page-sub">
+            Review, approve, and manage your event staffing requests.
+          </p>
+        </div>
+
+        {/* ── Stats strip ── */}
+        {!loading && bookings.length > 0 && (
+          <div className="br-stats-strip">
+            {[
+              { label: "Total",    num: bookings.length,                                          icon: "📋" },
+              { label: "Pending",  num: bookings.filter(b => b.status === "pending").length,  icon: "⏳" },
+              { label: "Approved", num: bookings.filter(b => b.status === "approved").length, icon: "✅" },
+              { label: "Rejected", num: bookings.filter(b => b.status === "rejected").length, icon: "❌" },
+            ].map(s => (
+              <div className="br-stat-card" key={s.label}>
+                <span className="br-stat-icon">{s.icon}</span>
+                <span className="br-stat-num">{s.num}</span>
+                <span className="br-stat-lbl">{s.label}</span>
+              </div>
+            ))}
           </div>
         )}
 
-        <div className="bookings-grid">
-          {bookings.map((b) => (
-            <div key={b.id} className="booking-card">
+        {/* ── Loading ── */}
+        {loading && (
+          <div className="br-loading">
+            <div className="br-spinner" />
+            <p>Loading bookings…</p>
+          </div>
+        )}
 
-              <div className="card-top">
-                <span className={`status-badge ${b.status}`}>
-                  {b.status}
-                </span>
-                <span className="slot-id">ID: #{b.id}</span>
-              </div>
+        {/* ── Empty state ── */}
+        {!loading && bookings.length === 0 && (
+          <div className="br-empty">
+            <div className="br-empty-icon">📭</div>
+            <h3>No booking requests yet</h3>
+            <p>Staffing requests for your events will appear here.</p>
+          </div>
+        )}
 
-              <div className="card-body">
-                <span className="value">
-                  {b.slot_position?.replace("_", " ")}
-                </span>
-              </div>
+        {/* ── Grid ── */}
+        {!loading && bookings.length > 0 && (
+          <div className="br-grid">
+            {bookings.map((b) => (
+              <div key={`${b.request_type}-${b.id}`} className={`br-card status-${b.status}`}>
 
-              <div className="card-actions">
-                <button
-                  className="btn-details"
-                  onClick={() => setSelectedBooking(b)}
-                >
-                  View Details
+                {/* Card header */}
+                <div className="br-card-top">
+                  <span className={`br-status-badge ${b.status}`}>
+                    {statusMeta[b.status]?.icon} {statusMeta[b.status]?.label || b.status}
+                  </span>
+                  <span className="br-card-id">#{b.id}</span>
+                </div>
+
+                {b.request_type === "waitlist" && (
+                  <div className="br-waitlist-tag">Whitelist Request</div>
+                )}
+
+                {/* Position */}
+                <div className="br-card-position">
+                  {(b.slot_position || b.role)?.replace(/_/g, " ")}
+                </div>
+
+                {/* Worker preview */}
+                <div className="br-card-worker">
+                  <div className="br-worker-avatar">
+                    {(b.worker_name || "W")[0].toUpperCase()}
+                  </div>
+                  <div className="br-worker-info">
+                    <span className="br-worker-name">{b.worker_name || "—"}</span>
+                    <span className="br-worker-loc">📍 {b.location || "—"}</span>
+                  </div>
+                  <span className="br-worker-salary">₹{b.salary}</span>
+                </div>
+
+                {/* Action */}
+                <button className="br-view-btn" onClick={() => setSelectedBooking(b)}>
+                  View Details →
                 </button>
-              </div>
 
-            </div>
-          ))}
-        </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/*  MODAL */}
+      {/* ════════════════════════════════
+          MODAL
+      ════════════════════════════════ */}
       {selectedBooking && (
-        <div className="modal-overlay">
-          <div className="modal-card">
+        <div className="br-overlay" onClick={(e) => e.target === e.currentTarget && setSelectedBooking(null)}>
+          <div className="br-modal">
 
-            <h2>👤 Worker Details</h2>
-
-            <p><strong>Name:</strong> {selectedBooking.worker_name}</p>
-            <p><strong>Phone:</strong> {selectedBooking.phone}</p>
-            <p><strong>Location:</strong> {selectedBooking.location}</p>
-
-            <p>
-              <strong>Role:</strong>{" "}
-              {selectedBooking.slot_position?.replace("_", " ")}
-            </p>
-
-            <p><strong>Status:</strong> {selectedBooking.status}</p>
-
-            <p className="salary">
-              💰 ₹{selectedBooking.salary}
-            </p>
-
-            {/* 💬 CHAT BUTTON (NEW) */}
-            {selectedBooking.status === "approved" && (
-              <button
-                className="btn-details"
-                style={{
-                  marginTop: "10px",
-                  background: "#4CAF50",
-                  color: "white"
-                }}
-                onClick={() => {
-                  console.log("Worker ID:", selectedBooking.worker_user_id);
-
-                  if (!selectedBooking.worker_user_id) {
-                    alert("Worker ID missing ❌");
-                    return;
-                  }
-
-                  navigate("/chat", {
-                             
-  state: {
-    receiver_id: selectedBooking.worker_user_id
-,
-    receiver_role: "company"
-  } 
-});
-                }}
-              >
-                💬 Chat with Worker
+            {/* Modal header */}
+            <div className="br-modal-header">
+              <div className="br-modal-avatar">
+                {(selectedBooking.worker_name || "W")[0].toUpperCase()}
+              </div>
+              <div className="br-modal-title-wrap">
+                <h2>{selectedBooking.worker_name}</h2>
+                <span className={`br-status-badge ${selectedBooking.status}`}>
+                  {statusMeta[selectedBooking.status]?.icon} {statusMeta[selectedBooking.status]?.label || selectedBooking.status}
+                </span>
+              </div>
+              <button className="br-modal-close-x" onClick={() => setSelectedBooking(null)} aria-label="Close">
+                ✕
               </button>
-            )}
+            </div>
 
-            {/* ✅ APPROVE / REJECT */}
-            {selectedBooking.status === "pending" && (
-              <div className="modal-actions">
-                <button
-                  className="btn-approve"
-                  onClick={() =>
-                    updateStatus(selectedBooking.id, "approved")
-                  }
-                >
-                  Approve
-                </button>
+            <div className="br-neural-bar" />
 
-                <button
-                  className="btn-reject"
-                  onClick={() =>
-                    updateStatus(selectedBooking.id, "rejected")
-                  }
-                >
-                  Reject
-                </button>
+            {/* Info grid */}
+            <div className="br-modal-body">
+              <div className="br-info-grid">
+                {[
+                  { icon: "📞", label: "Phone",    val: selectedBooking.phone },
+                  { icon: "📍", label: "Location", val: selectedBooking.location },
+                  { icon: "🎭", label: "Role",     val: (selectedBooking.slot_position || selectedBooking.role)?.replace(/_/g, " ") },
+                  { icon: "🪪", label: "Booking",  val: `#${selectedBooking.id}` },
+                ].map(row => (
+                  <div className="br-info-row" key={row.label}>
+                    <span className="br-info-icon">{row.icon}</span>
+                    <div>
+                      <span className="br-info-label">{row.label}</span>
+                      <span className="br-info-val">{row.val || "—"}</span>
+                    </div>
+                  </div>
+                ))}
               </div>
-            )}
 
-            {/* ATTENDANCE */}
-            {selectedBooking.status === "approved" &&
-             selectedBooking.attendance === "pending" && (
-              <div className="modal-actions">
-
-                <button
-                  className="btn-approve"
-                  onClick={() =>
-                    markAttendance(selectedBooking.id, "present")
-                  }
-                >
-                  Mark Present
-                </button>
-
-                <button
-                  className="btn-reject"
-                  onClick={() =>
-                    markAttendance(selectedBooking.id, "absent")
-                  }
-                >
-                  Mark Absent
-                </button>
-
+              {/* Salary highlight */}
+              <div className="br-salary-card">
+                <span className="br-salary-label">
+                  {selectedBooking.request_type === "waitlist" ? "Whitelist" : "Salary"}
+                </span>
+                <span className="br-salary-amount">₹{selectedBooking.salary}</span>
               </div>
-            )}
 
-            {/*  RATING */}
-            {selectedBooking.attendance === "present" && (
-              <div className="rating-box">
-
-                <h4>⭐ Rate Worker</h4>
-
-                <select
-                  value={rating}
-                  onChange={(e) => setRating(e.target.value)}
-                >
-                  <option value="">Select Rating</option>
-                  <option value="5">⭐⭐⭐⭐⭐</option>
-                  <option value="4">⭐⭐⭐⭐</option>
-                  <option value="3">⭐⭐⭐</option>
-                  <option value="2">⭐⭐</option>
-                  <option value="1">⭐</option>
-                </select>
-
+              {/* ── Chat button ── */}
+              {selectedBooking.status === "approved" && (
                 <button
-                  onClick={() =>
-                    submitRating(selectedBooking.id)
-                  }
+                  className="br-chat-btn"
+                  onClick={() => {
+                    if (!selectedBooking.worker_user_id) {
+                      toast.error("Worker ID missing ❌"); return;
+                    }
+                    navigate("/chat", {
+                      state: {
+                        receiver_id: selectedBooking.worker_user_id,
+                        receiver_role: "company",
+                        receiver_name: selectedBooking.worker_name,
+                      },
+                    });
+                  }}
                 >
-                  Submit Rating
+                  💬 Chat with Worker
                 </button>
+              )}
 
-              </div>
-            )}
+              {/* ── Approve / Reject ── */}
+              {selectedBooking.status === "pending" && (
+                <div className="br-modal-actions">
+                  <button className="br-btn-approve" onClick={() => updateStatus(selectedBooking, "approved")}>
+                    ✓ {selectedBooking.request_type === "waitlist" ? "Allow Worker" : "Approve"}
+                  </button>
+                  <button className="br-btn-reject" onClick={() => updateStatus(selectedBooking, "rejected")}>
+                    ✕ Reject
+                  </button>
+                </div>
+              )}
 
-            <button
-              className="close-btn"
-              onClick={() => setSelectedBooking(null)}
-            >
-              Close
-            </button>
+              {/* ── Attendance ── */}
+              {selectedBooking.status === "approved" && selectedBooking.attendance === "pending" && (
+                <>
+                  <div className="br-section-divider">Mark Attendance</div>
+                  <div className="br-modal-actions">
+                    <button className="br-btn-approve" onClick={() => markAttendance(selectedBooking.id, "present")}>
+                      ✓ Present
+                    </button>
+                    <button className="br-btn-reject" onClick={() => markAttendance(selectedBooking.id, "absent")}>
+                      ✕ Absent
+                    </button>
+                  </div>
+                </>
+              )}
+
+              {/* ── Rating ── */}
+              {selectedBooking.attendance === "present" && (
+                <>
+                  <div className="br-section-divider">Rate Worker</div>
+                  <div className="br-rating-box">
+                    <div className="br-star-row">
+                      {[5, 4, 3, 2, 1].map(n => (
+                        <button
+                          key={n}
+                          className={`br-star-btn ${parseInt(rating) >= n ? "active" : ""}`}
+                          onClick={() => setRating(String(n))}
+                        >
+                          ★
+                        </button>
+                      ))}
+                    </div>
+                    <button
+                      className="br-btn-approve"
+                      style={{ width: "100%" }}
+                      onClick={() => submitRating(selectedBooking.id)}
+                    >
+                      Submit Rating {rating ? `(${rating}★)` : ""}
+                    </button>
+                  </div>
+                </>
+              )}
+
+            </div>
+
+            {/* Close */}
+            <div className="br-modal-footer">
+              <button className="br-close-btn" onClick={() => setSelectedBooking(null)}>
+                Close
+              </button>
+            </div>
 
           </div>
         </div>

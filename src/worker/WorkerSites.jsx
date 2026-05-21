@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 function WorkerSites() {
   const [sites, setSites] = useState([]);
   const [bookingMap, setBookingMap] = useState({});
+  const [waitlistMap, setWaitlistMap] = useState({});
   const [loading, setLoading] = useState(false);
   const [applyingId, setApplyingId] = useState(null);
 
@@ -16,16 +17,13 @@ function WorkerSites() {
     fetchSites();
   }, []);
 
-
   const fetchSites = async () => {
     setLoading(true);
     try {
       const res = await api.get("all-sites/");
-
-      console.log('ans', res.data.user_bookings); 
-
       setSites(res.data.sites || []);
       setBookingMap(res.data.user_bookings || {});
+      setWaitlistMap(res.data.user_waitlist || {});
     } catch (err) {
       console.log("ERROR:", err.response?.data);
       toast.error("Failed to load sites ❌");
@@ -33,23 +31,38 @@ function WorkerSites() {
     setLoading(false);
   };
 
- 
-  const hasActiveBooking = () => {
-    return (
-      Object.values(bookingMap).includes("pending") ||
-      Object.values(bookingMap).includes("approved")
-    );
-  };
+  const hasActiveBooking = (siteDate) =>
+    Object.entries(bookingMap).some(([slotId, status]) => {
+      if (status !== "pending" && status !== "approved") return false;
+      if (!siteDate) return true;
 
-  
+      return sites.some(
+        (site) =>
+          site.date === siteDate &&
+          site.slots?.some((slot) => String(slot.id) === String(slotId))
+      );
+    });
+
   const apply = async (slotId) => {
-    if (hasActiveBooking()) {
-      toast.error("You can only apply for one role at a time ❌");
+    const site = sites.find((item) =>
+      item.slots?.some((slot) => slot.id === slotId)
+    );
+    const slot = site?.slots?.find((item) => item.id === slotId);
+
+    if (site && hasActiveBooking(site.date)) {
+      toast.error("You can only apply for one role on the same day ❌");
+      return;
+    }
+
+    const confirmed = window.confirm(
+      `Do you want to apply for ${slot?.position?.replace(/_/g, " ") || "this role"} at ${site?.name || "this site"}?`
+    );
+
+    if (!confirmed) {
       return;
     }
 
     setApplyingId(slotId);
-
     try {
       await api.post("apply/", { slot: slotId });
       toast.success("Application Sent! ✅");
@@ -57,119 +70,273 @@ function WorkerSites() {
     } catch (err) {
       toast.error(err.response?.data?.error || "Application failed ❌");
     }
-
     setApplyingId(null);
   };
 
-  
-  const getButtonText = (slot) => {
-    const status = bookingMap[slot.id];
+  const applyWaitlist = async (slotId) => {
+    const site = sites.find((item) =>
+      item.slots?.some((slot) => slot.id === slotId)
+    );
+    const slot = site?.slots?.find((item) => item.id === slotId);
 
-    if (status === "pending") return "Pending";
-    if (status === "approved") return "Approved";
-    if (status === "rejected") return "Rejected";
+    if (site && hasActiveBooking(site.date)) {
+      toast.error("You can only apply for one role on the same day ❌");
+      return;
+    }
 
-    return slot.available_slots > 0 ? "Apply Now" : "Full";
+    const confirmed = window.confirm(
+      `Join the waitlist for ${slot?.position?.replace(/_/g, " ") || "this role"} at ${site?.name || "this site"}?`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setApplyingId(slotId);
+    try {
+      await api.post("waitlist/apply/", { slot: slotId });
+      toast.success("Waitlist request sent ✅");
+      fetchSites();
+    } catch (err) {
+      console.log("WAITLIST ERROR:", err.response?.data || err.message);
+      toast.error(
+        err.response?.data?.error ||
+        err.response?.data?.detail ||
+        "Waitlist request failed ❌"
+      );
+    }
+    setApplyingId(null);
   };
 
- 
+  const getButtonLabel = (slot) => {
+    const status = bookingMap[slot.id];
+    const waitlistStatus = waitlistMap[slot.id];
+    if (status === "pending")  return { icon: "⏳", text: "Pending Review" };
+    if (status === "approved") return { icon: "✓",  text: "Approved" };
+    if (status === "rejected") return { icon: "✕",  text: "Rejected" };
+    if (waitlistStatus === "pending") return { icon: "⏳", text: "Waitlist Pending" };
+    if (waitlistStatus === "approved") return { icon: "✓", text: "Waitlist Approved" };
+    if (waitlistStatus === "rejected") return { icon: "✕", text: "Waitlist Rejected" };
+    return slot.available_slots > 0
+      ? { icon: "→", text: "Apply Now" }
+      : { icon: "+", text: "Join Waitlist" };
+  };
+
+  const getButtonStatus = (slot) => {
+    if (bookingMap[slot.id]) return bookingMap[slot.id];
+    if (waitlistMap[slot.id]) return `waitlist-${waitlistMap[slot.id]}`;
+    return "";
+  };
+
   const isDisabled = (slot) => {
     const status = bookingMap[slot.id];
-
+    const waitlistStatus = waitlistMap[slot.id];
     return (
-      slot.available_slots <= 0 ||
       applyingId === slot.id ||
       status === "pending" ||
       status === "approved" ||
-      hasActiveBooking()
+      waitlistStatus === "pending" ||
+      waitlistStatus === "approved" ||
+      hasActiveBooking(slot.site_date)
     );
   };
-console.log('sites', sites);
+
+  // Count active slots across all sites
+  const totalOpenSlots = sites.reduce(
+    (acc, site) =>
+      acc + (site.slots?.reduce((s, sl) => s + (sl.available_slots || 0), 0) || 0),
+    0
+  );
+
+  const formatDate = (dateStr) => {
+    if (!dateStr) return { day: "—", month: "" };
+    const d = new Date(dateStr);
+    return {
+      day: d.toLocaleDateString("en-GB", { day: "numeric" }),
+      month: d.toLocaleDateString("en-GB", { month: "short" }).toUpperCase(),
+    };
+  };
+
   return (
     <div className="worker-sites-page">
-      <div className="worker-header">
-        <h2>Available Opportunities</h2>
-        <p>Find and apply for event roles</p>
-      </div>
+      {/* Background blobs */}
+      <div className="ws-blob-tr" />
+      <div className="ws-blob-bl" />
 
-      {loading && <p>Loading sites...</p>}
-
-      {!loading && sites.length === 0 && (
-        <p>No available sites right now.</p>
-      )}
-
-      <div className="sites-container">
-        {sites.map((site) => (
-          <div key={site.id} className="job-site-group">
-            {/* HEADER */}
-            <div className="site-info-header">
-              <div className="title-box">
-                <h3>{site.name}</h3>
-                <span>📍 {site.location || "Unknown"}</span>
-              
-              </div> 
-
-
-
-              <div className="date-tag">
-                {site.date
-                  ? new Date(site.date).toLocaleDateString("en-GB", {
-                      day: "numeric",
-                      month: "short",
-                    })
-                  : "N/A"}
-              </div>
+      {/* ── Hero Band ─────────────────────────────── */}
+      <div className="worker-hero-band">
+        <div className="hero-band-inner">
+          <div className="hero-band-left">
+            <div className="hero-section-pill">
+              <span className="pill-dot" />
+              Live Opportunities
             </div>
 
-           
-            <div className="job-slots-grid">
-              {site.slots?.map((slot) => (
-                <div key={slot.id} className="job-slot-card">
-                  <div className="slot-main">
-                    <span className="position-name">
-                      {slot.position.replace("_", " ")}
-                    </span>
+            <h1>
+              Find Your Next <br />
+              <span>Event Role</span>
+            </h1>
 
-                    <div className="availability-pill">
-                      {slot.available_slots} Slots Left
+            <p>
+              Browse open positions across upcoming events and apply instantly.
+              Get hired by top companies in the events industry.
+            </p>
+
+            <div className="hero-stat-chips">
+              <div className="stat-chip">
+                <span className="stat-chip-num">{sites.length}</span>
+                <span className="stat-chip-lbl">Events</span>
+              </div>
+              <div className="stat-chip">
+                <span className="stat-chip-num">{totalOpenSlots}</span>
+                <span className="stat-chip-lbl">Open Slots</span>
+              </div>
+              <div className="stat-chip">
+                <span className="stat-chip-num">
+                  {hasActiveBooking() ? "1" : "0"}
+                </span>
+                <span className="stat-chip-lbl">Applied</span>
+              </div>
+            </div>
+          </div>
+
+          {hasActiveBooking() && (
+            <div className="hero-band-right">
+              <div className="active-booking-card">
+                <span className="abc-icon">📋</span>
+                <div className="abc-text">
+                  <strong>Application Active</strong>
+                  <span>You have a pending or approved application</span>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* ── Main Content ──────────────────────────── */}
+      <div className="ws-content">
+        {loading && (
+          <div className="ws-loading">
+            <div className="ws-loading-spinner" />
+            <p>Loading opportunities…</p>
+          </div>
+        )}
+
+        {!loading && sites.length === 0 && (
+          <div className="ws-empty">
+            <span className="ws-empty-icon">🔍</span>
+            <p>No available opportunities right now. Check back soon!</p>
+          </div>
+        )}
+
+        <div className="sites-container">
+          {sites.map((site) => {
+            const { day, month } = formatDate(site.date);
+            const siteOpenSlots = site.slots?.reduce(
+              (s, sl) => s + (sl.available_slots || 0),
+              0
+            ) || 0;
+
+            return (
+              <div key={site.id} className="job-site-group">
+                {/* Site Header */}
+                <div className="site-info-header">
+                  <div className="title-box">
+                    <h3>{site.name}</h3>
+                    <div className="site-meta-row">
+                      <span className="site-location">
+                        📍 {site.location || "Location TBD"}
+                      </span>
+                      <span className="site-slots-count">
+                        ✦ {siteOpenSlots} slot{siteOpenSlots !== 1 ? "s" : ""} open
+                      </span>
                     </div>
                   </div>
 
-                 
-                  <button
-                    className={`apply-btn ${bookingMap[slot.id] || ""}`}
-                    onClick={() => apply(slot.id)}
-                    disabled={isDisabled(slot)}
-                  >
-                    {applyingId === slot.id
-                      ? "Applying..."
-                      : getButtonText(slot)}
-                  </button>
-
-                  
-                  {bookingMap[slot.id] === "approved" && (
-                    <button
-                      className="chat-btn"
-                      onClick={() => {
-                        console.log("Receiver ID:", site.company_id); 
-
-                       navigate("/chat", {
-  state: {
-    receiver_id: site.company,
-    receiver_role: "worker"
-  }
-});
-                      }}
-                    >
-                      💬 Chat with Company
-
-                    </button>
-                  )}
+                  <div className="date-tag">
+                    <span className="date-day">{day}</span>
+                    <span className="date-month">{month}</span>
+                  </div>
                 </div>
-              ))}
-            </div>
-          </div>
-        ))}
+
+                {/* Slot Cards */}
+                <div className="job-slots-grid">
+                  {site.slots?.map((slot) => {
+                    const slotWithDate = { ...slot, site_date: site.date };
+                    const status = bookingMap[slot.id];
+                    const buttonStatus = getButtonStatus(slot);
+                    const { icon, text } = getButtonLabel(slotWithDate);
+                    const isAvail = slot.available_slots > 0;
+
+                    return (
+                      <div key={slot.id} className="job-slot-card">
+                        {/* Top row */}
+                        <div className="slot-main">
+                          <span className="position-name">
+                            {slot.position.replace(/_/g, " ")}
+                          </span>
+                          <span
+                            className={`availability-pill ${isAvail ? "available" : "full"}`}
+                          >
+                            <span className="avail-dot" />
+                            {isAvail
+                              ? `${slot.available_slots} left`
+                              : "Full"}
+                          </span>
+                        </div>
+
+                        <div className="card-divider" />
+
+                        {/* Approved banner */}
+                        {status === "approved" && (
+                          <div className="approved-banner">
+                            <span>🎉 You're hired for this role!</span>
+                          </div>
+                        )}
+
+                        {/* Apply Button */}
+                        <button
+                          className={`apply-btn ${buttonStatus}`}
+                          onClick={() =>
+                            isAvail ? apply(slot.id) : applyWaitlist(slot.id)
+                          }
+                          disabled={isDisabled(slotWithDate)}
+                        >
+                          {applyingId === slot.id ? (
+                            "Applying…"
+                          ) : (
+                            <>
+                              <span className="btn-icon">{icon}</span>
+                              {text}
+                            </>
+                          )}
+                        </button>
+
+                        {/* Chat Button */}
+                        {status === "approved" && (
+                          <button
+                            className="chat-btn"
+                            onClick={() =>
+                              navigate("/chat", {
+                                state: {
+                                  receiver_id: site.company,
+                                  receiver_role: "worker",
+                                },
+                              })
+                            }
+                          >
+                            💬 Chat with Company
+                          </button>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

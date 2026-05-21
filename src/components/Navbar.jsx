@@ -1,8 +1,38 @@
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import API from "../api/axios";
-import NotificationBell from "./NotificationBell"; 
+import NotificationBell from "./NotificationBell";
 import "./Navbar.css";
+
+function ChatIcon() {
+  return (
+    <svg width="17" height="17" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.8 8.8 0 0 1-3.9-.9L3 20l1.3-4.3a8.2 8.2 0 0 1-.9-3.8 8.4 8.4 0 0 1 8.5-8.4 8.5 8.5 0 0 1 9.1 8Z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function UserIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M20 21a8 8 0 0 0-16 0M12 13a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
 
 export default function Navbar() {
   const [user, setUser] = useState(null);
@@ -10,59 +40,59 @@ export default function Navbar() {
 
   useEffect(() => {
     API.get("/me/", { withCredentials: true })
-      .then((res) => {
-        setUser(res.data);
-      })
-      .catch(() => {
-        setUser(null);
-      });
+      .then((res) => setUser(res.data))
+      .catch(() => setUser(null));
   }, [location.pathname]);
 
   return (
     <nav className="navbar">
-      <h2 className="logo">SERVIO</h2>
 
+      {/* Logo */}
+      <h2 className="logo">
+        <span className="logo-icon">🍽️</span>
+        <span className="logo-text">SER<span>VIO</span></span>
+      </h2>
+
+      {/* Centre Links */}
       <div className="nav-links">
         <Link to="/">Home</Link>
+        <Link to="/ai-service" className="ai-nav-link">AI Service</Link>
 
-        
-        {!user && (
+        {user?.role === "worker" && (
           <>
-            <Link to="/login">Login</Link>
-            <Link to="/company-register">Company Register</Link>
+            <Link to="/sites">Sites</Link>
+            <Link to="/site-report">Site Report</Link>
+            <Link to="/payment-report">Payment Report</Link>
           </>
         )}
 
-        
+        {user?.role === "company" && (
+          <>
+            <Link to="/dashboard">Dashboard</Link>
+            <Link to="/create-site">Create Site</Link>
+            <Link to="/bookings">Bookings</Link>
+            <Link to="/site-attendance">Site Attendance</Link>
+          </>
+        )}
+
         {user && (
-          <div className="nav-right">
-            
-           
-            {user.role === "worker" && (
-              <>
-                <Link to="/sites">Sites</Link>
-                <Link to="/site-report">Site Report</Link>
-                <Link to="/payment-report">Payment Report</Link>
-              </>
-            )}
+          <Link to="/chat">
+            <ChatIcon />
+            Chat
+          </Link>
+        )}
+      </div>
 
-            
-            {user.role === "company" && (
-              <>
-                <Link to="/dashboard">Dashboard</Link>
-                <Link to="/create-site">Create Site</Link>
-                <Link to="/bookings">Bookings</Link>
-                <Link to="/site-attendance">Site Attendance</Link>
-              </>
-            )}
-
-            
-            <Link to="/chat">💬 Chat</Link>
-
-            
+      {/* Right Side */}
+      <div className="nav-right">
+        {!user ? (
+          <>
+            <Link to="/login" className="login-link">Login</Link>
+            <Link to="/company-register" className="register-btn">Company Register</Link>
+          </>
+        ) : (
+          <>
             <NotificationBell />
-
-            
             <Link to="/profile" className="profile-link">
               {user.profile_image ? (
                 <img
@@ -71,14 +101,14 @@ export default function Navbar() {
                   className="nav-profile-img"
                 />
               ) : (
-                "👤"
+                <UserIcon />
               )}
               {user.username}
             </Link>
-
-          </div>
+          </>
         )}
       </div>
+
     </nav>
   );
 }
