@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://127.0.0.1:8000/api",
+  baseURL: "https://api.servio-events.online/api",
   withCredentials: true, 
   headers: {
     "Content-Type": "application/json",
@@ -11,7 +11,7 @@ const API = axios.create({
 
 API.interceptors.request.use(
   (config) => {
-    console.log("API REQUEST:", config.url);
+   console.log("FULL API REQUEST:", config.baseURL + config.url);
     return config;
   },
   (error) => Promise.reject(error)

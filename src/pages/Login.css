@@ -261,4 +261,9 @@
   .login-card { grid-template-columns: 1fr; }
   .login-panel-side { display: none; }
   .login-form-side { padding: 40px 28px; }
+}.login-field-error {
+  color: #d64545;
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 2px;
 }

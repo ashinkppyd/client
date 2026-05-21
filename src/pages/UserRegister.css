@@ -221,4 +221,9 @@
   .user-panel-side { display: none; }
   .user-form-side { padding: 40px 28px; max-height: unset; }
   .user-row-3 { grid-template-columns: 1fr 1fr; }
+}.user-field-error {
+  color: #d64545;
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 2px;
 }

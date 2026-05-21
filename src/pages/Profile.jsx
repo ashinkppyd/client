@@ -32,6 +32,7 @@ export default function Profile() {
   const [qr, setQr]             = useState(null);
   const [otp, setOtp]           = useState("");
   const [mfaEnabled, setMfaEnabled] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState({});
   const navigate = useNavigate();
 
   const [editData, setEditData] = useState({
@@ -84,11 +85,30 @@ export default function Profile() {
   };
 
   // ── Edit ────────────────────────────────────────
-  const handleChange = (e) =>
+  const handleChange = (e) => {
+    if (fieldErrors[e.target.name]) {
+      setFieldErrors((prev) => ({ ...prev, [e.target.name]: "" }));
+    }
     setEditData({ ...editData, [e.target.name]: e.target.value });
+  };
+
+  const toFieldErrors = (data) => {
+    if (!data || typeof data !== "object") return {};
+    const next = {};
+
+    Object.keys(data).forEach((key) => {
+      if (["error", "detail", "message", "non_field_errors"].includes(key)) return;
+      const value = data[key];
+      if (Array.isArray(value) && value.length) next[key] = value[0];
+      else if (typeof value === "string") next[key] = value;
+    });
+
+    return next;
+  };
 
   const handleUpdate = async () => {
     try {
+      setFieldErrors({});
       const res = await API.put("/profile/", {
         username: editData.username,
         phone:    editData.phone,
@@ -97,7 +117,11 @@ export default function Profile() {
       setUser(res.data);
       setIsEditing(false);
       toast.success("Profile updated ✅");
-    } catch { toast.error("Update failed ❌"); }
+    } catch (err) {
+      const errors = toFieldErrors(err.response?.data);
+      if (Object.keys(errors).length) setFieldErrors(errors);
+      toast.error("Update failed ❌");
+    }
   };
 
   // ── MFA ─────────────────────────────────────────
@@ -129,8 +153,11 @@ export default function Profile() {
   // ── Logout ──────────────────────────────────────
   const handleLogout = async () => {
     await API.post("/logout/", {}, { withCredentials: true });
-    toast.success("Logged out 👋");
-    window.location.href = "/login";
+    localStorage.removeItem("user");
+    navigate("/login", {
+      replace: true,
+      state: { toastMessage: "Logged out 👋" },
+    });
   };
 
   // ── Derived ─────────────────────────────────────
@@ -269,6 +296,7 @@ export default function Profile() {
                       disabled={!isEditing}
                       placeholder="Your username"
                     />
+                    {fieldErrors.username ? <small className="profile-field-error">{fieldErrors.username}</small> : null}
                   </div>
                   <div className="form-group">
                     <label className="form-label">Email Address</label>
@@ -290,6 +318,7 @@ export default function Profile() {
                       disabled={!isEditing}
                       placeholder="+91 00000 00000"
                     />
+                    {fieldErrors.phone ? <small className="profile-field-error">{fieldErrors.phone}</small> : null}
                   </div>
                   <div className="form-group">
                     <label className="form-label">Location</label>
@@ -301,6 +330,7 @@ export default function Profile() {
                       disabled={!isEditing}
                       placeholder="City, State"
                     />
+                    {fieldErrors.place ? <small className="profile-field-error">{fieldErrors.place}</small> : null}
                   </div>
                   <div className="form-group">
                     <label className="form-label">Account ID</label>
