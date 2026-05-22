@@ -1,9 +1,11 @@
 import { createRoot } from 'react-dom/client'
-import { GoogleOAuthProvider } from '@react-oauth/google'  
+import { GoogleOAuthProvider } from '@react-oauth/google'
 import './index.css'
 import App from './App.jsx'
 
 const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || ""
+
+console.log("GOOGLE CLIENT:", googleClientId)
 
 createRoot(document.getElementById('root')).render(
   <GoogleOAuthProvider clientId={googleClientId}>
