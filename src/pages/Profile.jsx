@@ -151,14 +151,20 @@ export default function Profile() {
   };
 
   // ── Logout ──────────────────────────────────────
-  const handleLogout = async () => {
+const handleLogout = async () => {
+  try {
     await API.post("/logout/", {}, { withCredentials: true });
+
     localStorage.removeItem("user");
+
     navigate("/login", {
       replace: true,
       state: { toastMessage: "Logged out 👋" },
     });
-  };
+  } catch (err) {
+    console.error("Logout failed:", err);
+  }
+};
 
   // ── Derived ─────────────────────────────────────
   const avatarSrc = preview
